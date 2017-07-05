@@ -6,10 +6,12 @@
 	http://www.springframework.org/schema/security/spring-security-4.0.xsd">
 
 	<http auto-config="true" use-expressions="true">
-		<!-- <intercept-url pattern="/login*" access="isAnonymous()" />
-		<intercept-url pattern="/resources/*" access="isAnonymous()" /> -->
-		<intercept-url pattern="/centre**" access="hasRole('ROLE_USER')" />
-		<intercept-url pattern="/centre/**" access="hasRole('ROLE_USER')" />
+		<intercept-url pattern="/centre**" access="hasRole('ROLE_ADMIN')" />
+		<intercept-url pattern="/centre/**" access="hasRole('ROLE_ADMIN')" />
+		<intercept-url pattern="/user**" access="hasRole('ROLE_ADMIN')" />
+		<intercept-url pattern="/user/**" access="hasRole('ROLE_ADMIN')" />
+		<intercept-url pattern="/transaction**" access="hasRole('ROLE_USER')" />
+		<intercept-url pattern="/transaction/**" access="hasRole('ROLE_USER')" />
 
 		<access-denied-handler error-page="/403" />
 		
@@ -31,4 +33,5 @@
 		</authentication-provider>
 	</authentication-manager>
 
+    <beans:bean id="userDetailsService" class="com.hkta.educentresystem.service.impl.UserDetailsServiceImpl"></beans:bean>
 </beans:beans>

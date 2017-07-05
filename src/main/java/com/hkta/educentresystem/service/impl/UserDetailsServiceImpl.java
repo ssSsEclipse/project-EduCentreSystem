@@ -15,8 +15,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import com.hkta.educentresystem.dao.UserDao;
+import com.hkta.educentresystem.repository.UserRepository;
 
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService {
@@ -24,24 +25,22 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 	private static final Logger logger = LoggerFactory.getLogger(UserDetailsServiceImpl.class);
 
 	@Autowired
-	private UserDao userDao;
+	private UserRepository userRepository;
 
 	@Override
+    @Transactional(readOnly = true)
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-		com.hkta.educentresystem.entity.User user = userDao.getUserByUsername(username);
+		com.hkta.educentresystem.entity.User user = userRepository.findByUsername(username);
 		if (user != null) {
-			return buildUserForAuthentication(user, buildUserAuthority());
+			List<GrantedAuthority> authorities = buildUserAuthority(user.getRole());
+			return new User(user.getUsername(), user.getPassword(), user.isActive(), true, true, true, authorities);
 		}
 		throw new UsernameNotFoundException("User not found");
 	}
 
-	private User buildUserForAuthentication(com.hkta.educentresystem.entity.User user, List<GrantedAuthority> authorities) {
-		return new User(user.getUsername(), user.getPassword(), true, true, true, true, authorities);
-	}
-
-	private List<GrantedAuthority> buildUserAuthority() {
+	private List<GrantedAuthority> buildUserAuthority(String userRole) {
 		Set<GrantedAuthority> setAuths = new HashSet<GrantedAuthority>();
-		setAuths.add(new SimpleGrantedAuthority("ROLE_USER"));
+		setAuths.add(new SimpleGrantedAuthority(userRole));
 		return new ArrayList<GrantedAuthority>(setAuths);
 	}
 }

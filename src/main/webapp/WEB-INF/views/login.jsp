@@ -2,46 +2,101 @@
 <%@page session="true"%>
 <html>
 <head>
-<title>Login Page</title>
-<style>
-.error {
-	padding: 15px;
-	margin-bottom: 20px;
-	border: 1px solid transparent;
-	border-radius: 4px;
-	color: #a94442;
-	background-color: #f2dede;
-	border-color: #ebccd1;
+<meta charset="utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport"
+	content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Login</title>
+<link rel="stylesheet" type="text/css"
+	href="webjars/Semantic-UI/2.2.10/semantic.min.css" charset="UTF-8">
+<script src="webjars/jquery/3.1.1/jquery.min.js"></script>
+<script src="webjars/Semantic-UI/2.2.10/semantic.min.js"></script>
+<style type="text/css">
+body {
+	background-color: #DADADA;
 }
 
-.msg {
-	padding: 15px;
-	margin-bottom: 20px;
-	border: 1px solid transparent;
-	border-radius: 4px;
-	color: #31708f;
-	background-color: #d9edf7;
-	border-color: #bce8f1;
+body>.grid {
+	height: 100%;
 }
 
-#login-box {
-	width: 300px;
-	padding: 20px;
-	margin: 100px auto;
-	background: #fff;
-	-webkit-border-radius: 2px;
-	-moz-border-radius: 2px;
-	border: 1px solid #000;
+.image {
+	margin-top: -100px;
+}
+
+.column {
+	max-width: 450px;
 }
 </style>
+<script>
+	$(document).ready(function() {
+		$('.ui.form').form({
+			fields : {
+				username : {
+					identifier : 'username',
+					rules : [ {
+						type : 'empty',
+						prompt : 'Please enter your username'
+					} ]
+				},
+				password : {
+					identifier : 'password',
+					rules : [ {
+						type : 'empty',
+						prompt : 'Please enter your password'
+					} ]
+				}
+			}
+		});
+	});
+</script>
 </head>
-<body onload='document.loginForm.username.focus();'>
+<body>
 
-	<h1>Spring Security Login Form (Database + Hibernate Authentication)</h1>
+	<div class="ui middle aligned center aligned grid">
+		<div class="column">
+			<h2 class="ui teal header">
+				<div class="content">Portal</div>
+			</h2>
+			<form class="ui large form" 　name='loginForm'
+				action="login" method='POST'>
+				<div class="ui stacked segment">
 
-	<div id="login-box">
+					<div class="field">
+						<div class="ui left icon input">
+							<i class="user icon"></i> <input type="text" name="username"
+								placeholder="Username">
+						</div>
+					</div>
+					<div class="field">
+						<div class="ui left icon input">
+							<i class="lock icon"></i> <input type="password" name="password"
+								placeholder="Password">
+						</div>
+					</div>
+					<div class="ui fluid large teal submit button">Login</div>
+				</div>
+				<input type="hidden" name="${_csrf.parameterName}"
+					value="${_csrf.token}" />
 
-		<h3>Login with Username and Password</h3>
+				
+				<div class="ui error message"></div>
+			</form>
+			<c:if test="${not empty error}">
+					<div class="ui error message">
+						<ul class="list">
+							<li>${error}</li>
+						</ul>
+					</div>
+				</c:if>
+		</div>
+	</div>
+
+</body>
+
+<div id="login-box">
+
+	<%-- <h3>Login with Username and Password</h3>
 
 		<c:if test="${not empty error}">
 			<div class="error">${error}</div>
@@ -71,8 +126,5 @@
 			<input type="hidden" name="${_csrf.parameterName}"
 				value="${_csrf.token}" />
 
-		</form>
-	</div>
-
-</body>
+		</form> --%>
 </html>
