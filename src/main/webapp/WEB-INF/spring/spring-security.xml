@@ -1,5 +1,4 @@
-<beans:beans xmlns="http://www.springframework.org/schema/security" xmlns:beans="http://www.springframework.org/schema/beans"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<beans:beans xmlns="http://www.springframework.org/schema/security" xmlns:beans="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans
 	http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
 	http://www.springframework.org/schema/security
@@ -12,15 +11,13 @@
 		<intercept-url pattern="/user/**" access="hasRole('ROLE_ADMIN')" />
 		<intercept-url pattern="/transaction**" access="hasRole('ROLE_USER')" />
 		<intercept-url pattern="/transaction/**" access="hasRole('ROLE_USER')" />
+		<intercept-url pattern="/home**" access="hasRole('ROLE_USER')" />
+		<intercept-url pattern="/home/**" access="hasRole('ROLE_USER')" />
 
 		<access-denied-handler error-page="/403" />
-		
-		<form-login
-		    login-page="/login"
-		    default-target-url="/home"
-			authentication-failure-url="/login?error"
-			username-parameter="username"
-			password-parameter="password" />
+
+		<form-login login-page="/login" default-target-url="/home" authentication-failure-url="/login?error" authentication-success-handler-ref="userAuthenticationSuccessHandler"
+			username-parameter="username" password-parameter="password" />
 		<logout logout-success-url="/login?logout" />
 
 		<csrf />
@@ -28,10 +25,12 @@
 
 	<!-- Select users and user_roles from database -->
 	<authentication-manager>
-		<authentication-provider user-service-ref="userDetailsService" >
+		<authentication-provider user-service-ref="userDetailsService">
 			<password-encoder hash="bcrypt" />
 		</authentication-provider>
 	</authentication-manager>
 
-    <beans:bean id="userDetailsService" class="com.hkta.educentresystem.service.impl.UserDetailsServiceImpl"></beans:bean>
+	<beans:bean id="userDetailsService" class="com.hkta.educentresystem.service.impl.UserDetailsServiceImpl" />
+
+	<beans:bean id="userAuthenticationSuccessHandler" class="com.hkta.educentresystem.security.UserAuthenticationSuccessHandler" />
 </beans:beans>

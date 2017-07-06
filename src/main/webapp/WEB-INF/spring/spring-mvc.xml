@@ -4,7 +4,8 @@
  http://www.springframework.org/schema/beans/spring-beans.xsd">
 
 	<mvc:annotation-driven />
-
+	<mvc:view-controller path="/" view-name="login"/>
+	
 	<mvc:resources mapping="/webjars/**" location="/webjars/" />
 	<mvc:resources mapping="/resources/**" location="/resources/" />
 

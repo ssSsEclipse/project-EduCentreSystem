@@ -2,13 +2,14 @@
 <%@ page session="true"%>
 <html>
 <head>
-<title>Home</title>
+<title>Console</title>
 </head>
 <body>
-  <jsp:include page="component/userHeader.jsp" />
+  <jsp:include page="component/adminHeader.jsp" />
 
   <div class="ui main text container">
-    <h1 class="ui header">Welcome</h1>
+    <h1 class="ui header">Welcome to admin console</h1>
+    
   </div>
 </body>
 </html>
