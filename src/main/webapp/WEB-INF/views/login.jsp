@@ -11,26 +11,26 @@
 <script src="webjars/jquery/3.1.1/jquery.min.js"></script>
 <script src="webjars/Semantic-UI/2.2.10/semantic.min.js"></script>
 <script>
-	$(document).ready(function() {
-		$('.ui.form').form({
-			fields : {
-				username : {
-					identifier : 'username',
-					rules : [ {
-						type : 'empty',
-						prompt : 'Please enter your username'
-					} ]
-				},
-				password : {
-					identifier : 'password',
-					rules : [ {
-						type : 'empty',
-						prompt : 'Please enter your password'
-					} ]
-				}
+$(function() {
+	$('.ui.form').form({
+		fields : {
+			username : {
+				identifier : 'username',
+				rules : [ {
+					type : 'empty',
+					prompt : 'Please enter your username'
+				} ]
+			},
+			password : {
+				identifier : 'password',
+				rules : [ {
+					type : 'empty',
+					prompt : 'Please enter your password'
+				} ]
 			}
-		});
+		}
 	});
+});
 </script>
 </head>
 <body>

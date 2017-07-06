@@ -2,8 +2,10 @@
 	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
 
-	<bean id="dozerMapper" class="org.dozer.DozerBeanMapper">
-        <property name="mappingFiles" 
-                  value="classpath*:/*mapping.xml"/>
+	<bean id="dozerBeanMapper" class="org.dozer.DozerBeanMapper">
+	</bean>
+	
+	<bean id="dozerMapper" class="com.hkta.educentresystem.mapper.CustomDozerMapper">
+      <constructor-arg ref="dozerBeanMapper"/>
 	</bean>
 </beans>

@@ -1,12 +1,9 @@
 package com.hkta.educentresystem.service;
 
-import java.util.Date;
-
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 
-import com.hkta.educentresystem.dto.TransactionDTO;
+import com.hkta.educentresystem.entity.Transaction;
 
 public interface TransactionService {
-	Page<TransactionDTO> findByRecordTime(Date from, Date to, Pageable pageRequest);
+	Page<Transaction> findByMonthYear(String month, String year, int page, int size);
 }
