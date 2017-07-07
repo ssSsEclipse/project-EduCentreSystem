@@ -3,14 +3,16 @@ var app = angular.module('app');
 app.controller('TransactionsCtrl', ['$scope','TransactionsService', function ($scope,TransactionsService) {
    var paginationOptions = {
      pageNumber: 1,
-	 pageSize: 5,
+	 pageSize: 10,
 	 sort: null
    };
 
-   TransactionsService.getTransactions( paginationOptions.pageNumber, paginationOptions.pageSize).success(function(data){
-	  $scope.gridOptions.data = data.content;
- 	  $scope.gridOptions.totalItems = data.totalElements;
-   });
+   $scope.getTransactions = function(){
+	   TransactionsService.getTransactions(paginationOptions.pageNumber, paginationOptions.pageSize).success(function(data){
+		  $scope.gridOptions.data = data.content;
+	 	  $scope.gridOptions.totalItems = data.totalElements;
+	   });    
+	}
    
    $scope.gridOptions = {
     paginationPageSizes: [5, 10, 20],
@@ -18,12 +20,11 @@ app.controller('TransactionsCtrl', ['$scope','TransactionsService', function ($s
     enableColumnMenus:false,
 	useExternalPagination: true,
     columnDefs: [
-      { name: 'id' },
-      { name: 'recordTime' },
-      { name: 'customerName' },
-      { name: 'content' },
-      { name: 'amount' },
-      { name: 'commission' }
+      { name: 'recordTime', width: "*", type: 'date', cellFilter: 'date:\'yyyy-MM-dd\'' },
+      { name: 'customerName', width: "*" },
+      { name: 'content', width: "*" },
+      { name: 'amount', width: "*" },
+      { name: 'commission', width: "*" }
     ],
     onRegisterApi: function(gridApi) {
         $scope.gridApi = gridApi;
@@ -38,6 +39,8 @@ app.controller('TransactionsCtrl', ['$scope','TransactionsService', function ($s
         });
      }
   };
+   
+   $scope.getTransactions();
   
 }]);
 

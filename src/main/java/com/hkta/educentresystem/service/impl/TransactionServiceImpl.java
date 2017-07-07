@@ -24,7 +24,10 @@ public class TransactionServiceImpl implements TransactionService {
 	@Override
 	@Transactional(readOnly = true)
 	public Page<Transaction> findByMonthYear(String month, String year, int page, int size) {
-		Page<Transaction> result = transactionRepository.findByMonthYear(StringUtils.isEmpty(month) ? null : Integer.parseInt(month), StringUtils.isEmpty(year) ? null : Integer.parseInt(year), new PageRequest(page, size));
+		Page<Transaction> result = transactionRepository.findByMonthYear(
+				StringUtils.isEmpty(month) ? null : Integer.parseInt(month),
+				StringUtils.isEmpty(year) ? null : Integer.parseInt(year),
+				new PageRequest(page, size));
 		return result;
 	}
 	

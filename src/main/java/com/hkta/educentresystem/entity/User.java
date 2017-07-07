@@ -1,5 +1,7 @@
 package com.hkta.educentresystem.entity;
 
+import java.io.Serializable;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -12,7 +14,12 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "users")
-public class User extends AuditData{
+public class User extends AuditData implements Serializable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 247955556487832285L;
+
 	@Id
 	@Column(name = "id")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -1,6 +1,6 @@
-<!doctype html>
 <html ng-app="app">
 <head>
+<title>Transaction</title>
 <link rel="stylesheet" type="text/css" href="webjars/Semantic-UI/2.2.10/semantic.min.css" charset="UTF-8">
 <script src="webjars/jquery/3.1.1/jquery.min.js"></script>
 <script src="webjars/Semantic-UI/2.2.10/semantic.min.js"></script>
@@ -12,46 +12,46 @@
 <script src="resources/scripts/angular/app.js"></script>
 <script src="resources/scripts/angular/component/transactions.js"></script>
 <script type="text/javascript">
-	$(function() {
-		$('.ui.dropdown').dropdown();
-		$('.ui.form').form({
-			fields : {
-				year : {
-					identifier : 'year',
-					rules : [ {
-						type : 'empty',
-						prompt : 'Please enter year'
-					}, {
-						type : 'number',
-						prompt : 'Please enter a valid year'
-					}, {
-						type : 'regExp[/^[12][0-9]{3}$/]',
-						prompt : 'Please enter a valid year'
-					} ]
-				},
-				month : {
-					identifier : 'month',
-					rules : [ {
-						type : 'empty',
-						prompt : 'Please select month'
-					} ]
-				}
+$(function() {
+    $('.ui.dropdown').dropdown();
+    $('.ui.form').form({
+		fields : {
+			year : {
+				identifier : 'year',
+				rules : [ {
+					type : 'empty',
+					prompt : 'Please enter year'
+				}, {
+		            type   : 'number',
+					prompt : 'Please enter a valid year'
+				}, {
+		            type   : 'regExp[/^[12][0-9]{3}$/]',
+					prompt : 'Please enter a valid year'
+				}  ]
+			},
+			month : {
+				identifier : 'month',
+				rules : [ {
+					type : 'empty',
+					prompt : 'Please select month'
+				}]
 			}
-		});
+		}
 	});
+});
 </script>
 <style>
 .grid {
-	height: 400px;
+  height: 250px;
 }
 </style>
 </head>
 <body>
 	<jsp:include page="component/userHeader.jsp" />
 
-	<div class="ui main text container" ng-controller="TransactionsCtrl">
+	<div class="ui main text container">
 		<h1 class="ui dividing header">Search</h1>
-
+		
 		<%-- Search Form --%>
 		<form class="ui form" id="searchTransactionForm">
 			<div class="fields">
@@ -78,7 +78,7 @@
 							<input type="text" name="year" maxlength="4" placeholder="Year">
 						</div>
 						<div class="field">
-							<div class="ui button" ng-click="getTransactions()">Search</div>
+							<div class="ui button submit" onclick="getTransactions(0, 10); return false;">Search</div>
 						</div>
 					</div>
 				</div>
@@ -86,11 +86,11 @@
 			<div class="ui error message"></div>
 		</form>
 
+		<%-- Result Table --%>
 		<h1 class="ui dividing header">Result</h1>
-		<div>
-			<div id="grid1" ui-grid="gridOptions" ui-grid-pagination class="grid"></div>
+		<div ng-controller="TransactionsCtrl">
+			<div ui-grid="gridOptions" ui-grid-pagination class="grid"></div>
 		</div>
 	</div>
-
 </body>
 </html>
