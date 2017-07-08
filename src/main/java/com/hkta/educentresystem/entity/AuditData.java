@@ -1,5 +1,6 @@
 package com.hkta.educentresystem.entity;
 
+import java.io.Serializable;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -8,7 +9,12 @@ import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 
 @MappedSuperclass
-public class AuditData {
+public class AuditData implements Serializable{
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 4988083073979695084L;
 
 	@Column(name = "create_datetime")
 	private Date createDateTime;
@@ -18,28 +24,21 @@ public class AuditData {
 
 	@PrePersist
 	public void onPrePersist() {
-		setCreateDateTime(new Date());
+		this.createDateTime = new Date();
 	}
 	
 	@PreUpdate
     public void onPreUpdate() {
-		setModifiedDateTime(new Date());
+		this.modifiedDateTime = new Date();
     }
 
 	public Date getCreateDateTime() {
 		return createDateTime;
 	}
 
-	public void setCreateDateTime(Date createDateTime) {
-		this.createDateTime = createDateTime;
-	}
-
 	public Date getModifiedDateTime() {
 		return modifiedDateTime;
 	}
 
-	public void setModifiedDateTime(Date modifiedDateTime) {
-		this.modifiedDateTime = modifiedDateTime;
-	}
 
 }

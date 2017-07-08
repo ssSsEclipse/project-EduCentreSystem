@@ -17,6 +17,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.hkta.educentresystem.exception.DisabledException;
 import com.hkta.educentresystem.repository.UserRepository;
 
 @Service
@@ -28,7 +29,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 	private UserRepository userRepository;
 
 	@Override
-    @Transactional(readOnly = true)
+	@Transactional(readOnly = true)
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 		com.hkta.educentresystem.entity.User user = userRepository.findByUsername(username);
 		if (user != null) {
@@ -43,4 +44,5 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 		setAuths.add(new SimpleGrantedAuthority(userRole));
 		return new ArrayList<GrantedAuthority>(setAuths);
 	}
+
 }

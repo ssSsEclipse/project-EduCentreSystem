@@ -9,6 +9,7 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.LockedException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -41,6 +42,16 @@ public class LoginController {
 	    }
 	    return "redirect:/login?logout";//You can redirect wherever you want, but generally it's a good practice to show login screen again.
 	}
+	
+	@RequestMapping(value = "/403", method = RequestMethod.GET)
+    public String accessDeniedPage(Model model) {
+	    Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+	    if (auth != null){    
+	    	model.addAttribute("username", ((UserDetails) auth.getPrincipal()).getUsername()); 
+	    }
+	    
+        return "403";
+    }
 
 	// customize the error message
 	private String getErrorMessage(HttpServletRequest request, String key) {

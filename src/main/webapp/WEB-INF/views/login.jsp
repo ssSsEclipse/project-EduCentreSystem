@@ -60,10 +60,11 @@ $(function() {
 
 				<div class="ui error message"></div>
 			</form>
-			<c:if test="${not empty error}">
+			
+			<c:if test='${not empty error}'>
 				<div class="ui error message">
 					<ul class="list">
-						<li>${error}</li>
+						<li>${sessionScope["SPRING_SECURITY_LAST_EXCEPTION"].message}</li>
 					</ul>
 				</div>
 			</c:if>

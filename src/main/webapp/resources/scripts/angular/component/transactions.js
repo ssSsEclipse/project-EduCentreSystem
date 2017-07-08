@@ -20,11 +20,11 @@ app.controller('TransactionsCtrl', ['$scope','TransactionsService', function ($s
     enableColumnMenus:false,
 	useExternalPagination: true,
     columnDefs: [
-      { name: 'recordTime', width: "*", type: 'date', cellFilter: 'date:\'yyyy-MM-dd\'' },
-      { name: 'customerName', width: "*" },
-      { name: 'content', width: "*" },
-      { name: 'amount', width: "*" },
-      { name: 'commission', width: "*" }
+      { name: 'recordTime', displayName: "Record Date", width: "14%", type: 'date', cellFilter: 'date:"yyyy-MM-dd hh:mm:ss"' },
+      { name: 'customerName', displayName: "Customer", width: "12%" },
+      { name: 'content', width: "54%" },
+      { name: 'amount', width: "10%", cellFilter: 'currency' },
+      { name: 'commission', width: "10%", cellFilter: 'currency' }
     ],
     onRegisterApi: function(gridApi) {
         $scope.gridApi = gridApi;

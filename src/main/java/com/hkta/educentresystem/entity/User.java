@@ -4,12 +4,9 @@ import java.io.Serializable;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -37,9 +34,8 @@ public class User extends AuditData implements Serializable{
 	@Column(name = "role")
 	private String role;
 	
-	@JoinColumn(name = "tutorial_centre_id")
-	@ManyToOne(optional = true, fetch = FetchType.LAZY)
-	private TutorialCenter tutorialCentreId;
+	@Column(name = "tutorial_centre_id")
+	private Long tutorialCentreId;
 
 	public Long getId() {
 		return id;
@@ -77,11 +73,11 @@ public class User extends AuditData implements Serializable{
 		this.role = role;
 	}
 
-	public TutorialCenter getTutorialCentreId() {
+	public Long getTutorialCentreId() {
 		return tutorialCentreId;
 	}
 
-	public void setTutorialCentreId(TutorialCenter tutorialCentreId) {
+	public void setTutorialCentreId(Long tutorialCentreId) {
 		this.tutorialCentreId = tutorialCentreId;
 	}	
 	

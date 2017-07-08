@@ -15,8 +15,12 @@ public class UserServiceImpl extends AbstractBaseCrudService<User, Long> impleme
 	private UserRepository userRepository;
 
 	@Override
-	PagingAndSortingRepository<User, Long> getRepository() {
+	public PagingAndSortingRepository<User, Long> getRepository() {
 		return this.userRepository;
 	}
 
+	@Override
+	public User findByUsername(String username) {
+		return userRepository.findByUsername(username);
+	}
 }

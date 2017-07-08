@@ -8,7 +8,7 @@
 <script src="webjars/Semantic-UI/2.2.10/semantic.min.js"></script>
 </head>
 <body>
-  <jsp:include page="component/userHeader.jsp" />
+  <jsp:include page="component/header.jsp" />
 
   <div class="ui main text container">
     <h1 class="ui header">Welcome</h1>

@@ -10,7 +10,7 @@ import com.hkta.educentresystem.entity.User;
 @Repository
 public interface UserRepository extends PagingAndSortingRepository<User, Long> {
 	
-    User findByUsername(String username);
+	User findByUsername(String username);
    
 	Page<User> findAll(Pageable p);
 }

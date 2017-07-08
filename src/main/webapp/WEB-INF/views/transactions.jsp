@@ -44,18 +44,22 @@
 .grid {
 	height: 400px;
 }
+.main {
+	width: 900px;
+}
 </style>
 </head>
 <body>
-	<jsp:include page="component/userHeader.jsp" />
+	<jsp:include page="component/header.jsp" />
 
-	<div class="ui main text container" ng-controller="TransactionsCtrl">
+	<div class="ui main container" ng-controller="TransactionsCtrl">
 		<h1 class="ui dividing header">Search</h1>
 
 		<%-- Search Form --%>
 		<form class="ui form" id="searchTransactionForm">
 			<div class="fields">
 				<div class="eight wide field">
+      				<label>Record Date</label>
 					<div class="three fields">
 						<div class="field">
 							<select class="ui fluid search selection dropdown" name="month">
@@ -78,7 +82,7 @@
 							<input type="text" name="year" maxlength="4" placeholder="Year">
 						</div>
 						<div class="field">
-							<div class="ui button" ng-click="getTransactions()">Search</div>
+							<div class="ui button" ng-click="getTransactions()"><i class="search icon"></i>Search</div>
 						</div>
 					</div>
 				</div>
