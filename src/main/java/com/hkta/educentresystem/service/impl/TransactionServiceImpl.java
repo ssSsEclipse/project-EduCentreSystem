@@ -8,7 +8,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.hkta.educentresystem.entity.Transaction;
-import com.hkta.educentresystem.mapper.CustomDozerMapper;
 import com.hkta.educentresystem.repository.TransactionRepository;
 import com.hkta.educentresystem.service.TransactionService;
 
@@ -18,12 +17,12 @@ public class TransactionServiceImpl implements TransactionService {
 	@Autowired
 	private TransactionRepository transactionRepository;
 	
-	@Autowired
-	private CustomDozerMapper dozerMapper;
-	
 	@Override
 	@Transactional(readOnly = true)
 	public Page<Transaction> findByMonthYear(String month, String year, int page, int size) {
+		month = !StringUtils.isNumeric(month) ? "" : month;
+		year = !StringUtils.isNumeric(year) ? "" : year;
+		
 		Page<Transaction> result = transactionRepository.findByMonthYear(
 				StringUtils.isEmpty(month) ? null : Integer.parseInt(month),
 				StringUtils.isEmpty(year) ? null : Integer.parseInt(year),

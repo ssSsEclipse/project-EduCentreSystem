@@ -8,4 +8,5 @@
 	<bean id="dozerMapper" class="com.hkta.educentresystem.mapper.CustomDozerMapper">
       <constructor-arg ref="dozerBeanMapper"/>
 	</bean>
+
 </beans>

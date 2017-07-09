@@ -10,14 +10,13 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.hkta.educentresystem.exception.DisabledException;
+import com.hkta.educentresystem.dto.CustomUserDetails;
 import com.hkta.educentresystem.repository.UserRepository;
 
 @Service
@@ -34,7 +33,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 		com.hkta.educentresystem.entity.User user = userRepository.findByUsername(username);
 		if (user != null) {
 			List<GrantedAuthority> authorities = buildUserAuthority(user.getRole());
-			return new User(user.getUsername(), user.getPassword(), user.isActive(), true, true, true, authorities);
+			return new CustomUserDetails(user.getId(), user.getUsername(), user.getPassword(), user.isActive(), true, true, true, authorities);
 		}
 		throw new UsernameNotFoundException("User not found");
 	}

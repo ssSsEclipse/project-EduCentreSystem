@@ -1,5 +1,6 @@
 var app = angular.module('app', [ 'ui.grid', 'ui.grid.pagination',
-		'ui.grid.resizeColumns' ]);
+		'ui.grid.resizeColumns', 'pascalprecht.translate' ]);
+
 
 app.factory('CommonFactory', function() {
 	return {
@@ -34,10 +35,25 @@ app.factory('CommonFactory', function() {
 							element.checked = user[name];
 						}
 					}else if (type == 'select-one') {
-						$(element)
-						  .dropdown('set selected', user[name])
+						if (null === user[name]) {
+							$(element)
+							  .dropdown('restore defaults');
+						}else {
+							$(element)
+							  .dropdown('set selected', user[name]);
+						}
 					} else {
 						element.value = user[name];
+					}
+				}else if (name === 'tutorialCentreId') { //special handling for tutorialCentre
+					if (type == 'select-one') {
+						if (null === user['tutorialCentre']) {
+							$(element)
+							  .dropdown('restore defaults');
+						}else {
+							$(element)
+							  .dropdown('set selected', user['tutorialCentre']['id']);
+						}
 					}
 				}
 			}
@@ -66,3 +82,12 @@ app.factory('CommonFactory', function() {
 		}
 	}
 });
+
+app.config(['$translateProvider', function ($translateProvider) {
+    $translateProvider.useStaticFilesLoader({
+      prefix: 'resources/locales/locale-',
+      suffix: '.json'
+    });
+
+    $translateProvider.preferredLanguage('en');
+  }]);

@@ -4,7 +4,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Service;
 
+import com.hkta.educentresystem.dto.UserDto;
+import com.hkta.educentresystem.entity.Centre;
 import com.hkta.educentresystem.entity.User;
+import com.hkta.educentresystem.mapper.CustomDozerMapper;
+import com.hkta.educentresystem.repository.CentreRepository;
 import com.hkta.educentresystem.repository.UserRepository;
 import com.hkta.educentresystem.service.UserService;
 
@@ -13,6 +17,11 @@ public class UserServiceImpl extends AbstractBaseCrudService<User, Long> impleme
 
 	@Autowired
 	private UserRepository userRepository;
+	@Autowired
+	private CentreRepository centreRepository;
+	
+	@Autowired
+	private CustomDozerMapper dozerMapper;
 
 	@Override
 	public PagingAndSortingRepository<User, Long> getRepository() {
@@ -22,5 +31,14 @@ public class UserServiceImpl extends AbstractBaseCrudService<User, Long> impleme
 	@Override
 	public User findByUsername(String username) {
 		return userRepository.findByUsername(username);
+	}
+
+	public User save(UserDto userDto) {
+		User newUser = dozerMapper.map(userDto, User.class);
+		if (userDto.getTutorialCentreId() != null) {
+			Centre tutorialCentre = centreRepository.findOne(userDto.getTutorialCentreId());
+			newUser.setTutorialCentre(tutorialCentre);
+		}
+		return userRepository.save(newUser);
 	}
 }

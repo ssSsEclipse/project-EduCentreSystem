@@ -1,6 +1,7 @@
 var app = angular.module('app');
 
-app.controller('UsersCtrl', ['$scope','UsersService','CommonFactory', function ($scope,UsersService,CommonFactory) {
+app.controller('UsersCtrl', ['$scope','UsersService','CommonFactory','$translate','$filter', function ($scope,UsersService,CommonFactory,$translate,$filter) {
+	var $filterTranslate = $filter('translate');
 	var paginationOptions = {
 			pageNumber: 1,
 			pageSize: 10,
@@ -14,20 +15,26 @@ app.controller('UsersCtrl', ['$scope','UsersService','CommonFactory', function (
 		   enableFiltering: true,
 		   useExternalPagination: true,
 		   columnDefs: [
-		                { name: 'id', field: 'id', visible: false},
-		                { name: 'username', width: "13%" },
-		                { name: 'password', width: "20%" },
-		                { name: 'active', width: "7%" },
-		                { name: 'role', width: "10%" },
-		                { name: 'tutorialCentreId', width: "13%" },
-		                { name: 'createDateTime', width: "15%", type: 'date', cellFilter: 'date:"yyyy-MM-dd hh:mm:ss"', enableFiltering: false},
-		                { name: 'modifiedDateTime', width: "15%", type: 'date', cellFilter: 'date:"yyyy-MM-dd hh:mm:ss"', enableFiltering: false },
-		                { name: 'actions', displayName: 'Actions', width: "7%", enableFiltering: false, cellTemplate: 
-	                		'<div class="grid-action-cell">'+
-	                		'<a ng-click="grid.appScope.editSelectedRow(row.entity);" href="#"><i class="edit icon"></i></a>'+
-	                		'<a ng-click="grid.appScope.deleteUser(row.entity.id);" href="#"><i class="red remove icon"></i></a>'+
-	                		'</div>'
-		                }
+                { name: 'id', field: 'id', visible: false},
+                { name: 'username', width: "13%", displayName:'views.user.username', headerCellFilter:'translate'},
+                { name: 'password', width: "20%", displayName:'views.user.password', headerCellFilter:'translate'},
+                { name: 'active', width: "7%", displayName:'views.user.active', headerCellFilter:'translate' },
+                { name: 'role', width: "10%", displayName:'views.user.role', headerCellFilter:'translate' },
+                { name: 'tutorialCentreId', width: "13%", displayName:'views.user.tutorialCentre', 
+                	headerCellFilter:'translate', cellTemplate:'<div class="ui-grid-cell-contents" ng-if="row.entity.tutorialCentre">{{row.entity.tutorialCentre.schoolName}}</div>' +
+                    									'<div class="ui-grid-cell-contents" ng-if="!row.entity.tutorialCentre"></div>'
+                	},
+                { name: 'createDateTime', width: "15%", type: 'date', cellFilter: 'date:"yyyy-MM-dd hh:mm:ss"', enableFiltering: false
+                	, displayName:'column.header.createDateTime', headerCellFilter:'translate'},
+                { name: 'modifiedDateTime', width: "15%", type: 'date', cellFilter: 'date:"yyyy-MM-dd hh:mm:ss"', enableFiltering: false
+                	, displayName:'column.header.modifiedDateTime', headerCellFilter:'translate'},
+                { name: 'actions', width: "7%", enableFiltering: false, cellTemplate: 
+            		'<div class="grid-action-cell">'+
+            		'<a ng-click="grid.appScope.editSelectedRow(row.entity);" href="#"><i class="edit icon"></i></a>'+
+            		'<a ng-click="grid.appScope.deleteUser(row.entity.id);" href="#"><i class="red remove icon"></i></a>'+
+            		'</div>'
+            		, displayName:'column.header.actions', headerCellFilter:'translate'
+                }
            ],
            onRegisterApi: function(gridApi) {
         	   $scope.gridApi = gridApi;
@@ -36,6 +43,14 @@ app.controller('UsersCtrl', ['$scope','UsersService','CommonFactory', function (
         		   paginationOptions.pageSize = pageSize;
           
         		   UsersService.getAllUsers(newPage,pageSize).success(function(data){
+
+	    	        	$.each(data.content,function(row){
+	    	       		  row.getTutorialCentreId = function(){
+	    	       		    return this.tutorialCentre == null ? '' : this.tutorialCentre.id;
+	    	       		  };
+	    	       		  row.getTutorialCentreName = function(){
+	    	       		    return this.tutorialCentre == null ? '' : this.tutorialCentre.schoolName;
+	    	       		  }});
         			   $scope.gridOptions.data = data.content;
         			   $scope.gridOptions.totalItems = data.totalElements;
         		   });
@@ -45,10 +60,56 @@ app.controller('UsersCtrl', ['$scope','UsersService','CommonFactory', function (
    
    $scope.userForm = $('#userForm');
    $scope.responseMessage = $('#responseMessage');
+   $scope.editMode = false;
+
+	$('#activeCheckboxDiv').checkbox( {
+		onChange : function() {
+			$('#activeLabel').html($('#activeCheckbox').prop('checked') ? $filterTranslate('views.user.active.true') : $filterTranslate('views.user.active.false'));
+		}
+	});
+	$('#roleDropdown').dropdown();
+	UsersService.getCentreList().then(function success(response){
+		var select = $('#tutorialCentreId');
+		if (response.data.success && response.data.results) {
+			$(response.data.results).each(function(index, item) {
+				select.append($("<option></option>")
+	                    .attr("value",item.value)
+	                    .text(item.name)); 
+			});
+		}
+		
+		select.dropdown("refresh");
+    });
+	
+	/* Fail to get i18n message
+	 * var formValidationRules = {
+		fields : {
+			username : {
+				identifier : 'username',
+				rules : [ {
+					type : 'empty',
+					prompt : $filterTranslate('views.user.form.validation.username.required')
+				} ]
+			},
+			password : {
+				identifier : 'password',
+				rules : [ {
+					type : 'empty',
+					prompt : $filterTranslate('views.user.form.validation.password.required')
+				},
+				{
+					type : 'regExp[/^\$.{2}\$.{2}\$.{53}$/]',
+					prompt : 'Please enter a valid password encrypted in bycrypt'
+				}]
+			}
+		}
+	};*/
+	$('.ui.form').form();
    
    $scope.editSelectedRow = function(user) {
 	   if ($scope.userForm != null) {
 		   $scope.editMode = true;
+		   $scope.editingUser = user.username;
 		   CommonFactory.resetResponseMessage($scope.responseMessage)
 		   CommonFactory.putDataToForm(user, $scope.userForm);
 	   }
@@ -116,6 +177,14 @@ app.controller('UsersCtrl', ['$scope','UsersService','CommonFactory', function (
    $scope.getAllUsers = function () {
 	   UsersService.getAllUsers(paginationOptions.pageNumber, paginationOptions.pageSize)
          .then(function success(response){
+        	 $.each(response.data.content,function(row){
+	       		  row.getTutorialCentreId = function(){
+	       		    return this.tutorialCentre == null ? '' : this.tutorialCentre.id;
+	       		  };
+	       		  row.getTutorialCentreName = function(){
+		       		    return this.tutorialCentre == null ? '' : this.tutorialCentre.schoolName;
+	       		  };
+       		  });
    		     $scope.gridOptions.data = response.data.content;
    	 	     $scope.gridOptions.totalItems = response.data.totalElements;
          },
@@ -125,7 +194,6 @@ app.controller('UsersCtrl', ['$scope','UsersService','CommonFactory', function (
    }
    
    $scope.getAllUsers();
-   $scope.editMode = false;
   
 }]);
 app.service('UsersService',['$http','CommonFactory', function ($http,CommonFactory) {
@@ -164,6 +232,13 @@ app.service('UsersService',['$http','CommonFactory', function ($http,CommonFacto
         return  $http({
           method: 'GET',
           url: 'users/list?page='+pageNumber+'&size='+size
+        });
+    }
+    
+    this.getCentreList = function getCentreList() {
+        return  $http({
+          method: 'GET',
+          url: 'centres/simpleList'
         });
     }
 }]);

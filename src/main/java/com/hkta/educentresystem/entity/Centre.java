@@ -9,7 +9,12 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "tutorial_centre")
-public class TutorialCenter extends AuditData{
+public class Centre extends AuditData{
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 5422955536240948353L;
 
 	@Id
 	@Column(name = "id")
@@ -40,8 +45,8 @@ public class TutorialCenter extends AuditData{
 	@Column(name = "website")
 	private String website;
 
-	@Column(name = "bankName")
-	private String bank_name;
+	@Column(name = "bank_name")
+	private String bankName;
 
 	@Column(name = "account_name")
 	private String accountName;
@@ -123,12 +128,12 @@ public class TutorialCenter extends AuditData{
 		this.website = website;
 	}
 
-	public String getBank_name() {
-		return bank_name;
+	public String getBankName() {
+		return bankName;
 	}
 
-	public void setBank_name(String bank_name) {
-		this.bank_name = bank_name;
+	public void setBankName(String bankName) {
+		this.bankName = bankName;
 	}
 
 	public String getAccountName() {

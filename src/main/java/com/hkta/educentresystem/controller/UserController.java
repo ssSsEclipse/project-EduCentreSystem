@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.hkta.educentresystem.dto.ResponseMessage;
+import com.hkta.educentresystem.dto.UserDto;
 import com.hkta.educentresystem.entity.User;
 import com.hkta.educentresystem.exception.ResourceNotFoundException;
 import com.hkta.educentresystem.service.impl.UserServiceImpl;
@@ -57,9 +58,9 @@ public class UserController {
 	
 	@RequestMapping(method = RequestMethod.PATCH )
 	@ResponseBody
-	public ResponseEntity<ResponseMessage> updateUser(@RequestBody User user) {
-		User updatedUser = userService.save(user);
-		if (user != null) {
+	public ResponseEntity<ResponseMessage> updateUser(@RequestBody UserDto userDto) {
+		User updatedUser = userService.save(userDto);
+		if (updatedUser != null) {
 			return ResponseEntity.status(HttpStatus.ACCEPTED).body(new ResponseMessage(updatedUser.getId(), User.class.getName(), "User updated!"));
 		}
 		return ResponseEntity.status(HttpStatus.NOT_MODIFIED).body(new ResponseMessage("Unable to update user"));
@@ -67,7 +68,7 @@ public class UserController {
 	
 	@RequestMapping(value="/{id}", method = RequestMethod.DELETE )
 	@ResponseBody
-	public ResponseEntity<ResponseMessage> deletePerson(@PathVariable("id") Long id) {
+	public ResponseEntity<ResponseMessage> deleteUser(@PathVariable("id") Long id) {
 		User user = userService.findOne(id);
 		if (user != null) {
 			userService.delete(user);
@@ -78,12 +79,12 @@ public class UserController {
 
 	@RequestMapping(method = RequestMethod.POST)
 	@ResponseBody
-	public ResponseEntity<ResponseMessage> addUser(@RequestBody User user) {
-		User existingUser = userService.findByUsername(user.getUsername());
+	public ResponseEntity<ResponseMessage> addUser(@RequestBody UserDto userDto) {
+		User existingUser = userService.findByUsername(userDto.getUsername());
 		if (existingUser != null) {
 			return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(new ResponseMessage("Username already exists"));
 		}
-		User newUser = userService.save(user);
+		User newUser = userService.save(userDto);
 		if (newUser == null) {
 			return ResponseEntity.status(HttpStatus.NOT_MODIFIED).body(new ResponseMessage("Unable to add user"));
 		}
