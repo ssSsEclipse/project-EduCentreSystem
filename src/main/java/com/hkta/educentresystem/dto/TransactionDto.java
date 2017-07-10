@@ -1,5 +1,6 @@
-package com.hkta.educentresystem.entity;
+package com.hkta.educentresystem.dto;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
 
@@ -9,10 +10,17 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 @Entity
 @Table(name = "transaction_record")
-public class Transaction{
+public class TransactionDto implements Serializable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -4420799561915526445L;
+
 	@Id
 	@Column(name = "id")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -29,7 +37,7 @@ public class Transaction{
 
 	@Column(name = "amount")
 	private BigDecimal amount;
-	
+
 	@Column(name = "commission")
 	private BigDecimal commission;
 

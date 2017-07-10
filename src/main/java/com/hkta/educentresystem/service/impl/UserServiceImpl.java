@@ -33,7 +33,8 @@ public class UserServiceImpl extends AbstractBaseCrudService<User, Long> impleme
 		return userRepository.findByUsername(username);
 	}
 
-	public User save(UserDto userDto) {
+	@Override
+	public User saveDto(UserDto userDto) {
 		User newUser = dozerMapper.map(userDto, User.class);
 		if (userDto.getTutorialCentreId() != null) {
 			Centre tutorialCentre = centreRepository.findOne(userDto.getTutorialCentreId());

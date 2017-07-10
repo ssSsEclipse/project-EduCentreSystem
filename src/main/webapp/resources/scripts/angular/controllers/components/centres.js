@@ -30,9 +30,9 @@ app.controller('CentresCtrl', ['$scope','CentreService','CommonFactory','$transl
                 { name: 'accountNumber', minWidth: 150, displayName:'views.centre.accountNumber', headerCellFilter:'translate' },
                 { name: 'couponCode', minWidth: 300, displayName:'views.centre.couponCode', headerCellFilter:'translate' },
                 { name: 'discountComissionPdf', minWidth: 200, displayName:'views.centre.discountComissionPdf', headerCellFilter:'translate' },
-                { name: 'createDateTime', minWidth: 170, type: 'date', cellFilter: 'date:"yyyy-MM-dd hh:mm:ss"', enableFiltering: false
+                { name: 'createDateTime', minWidth: 170, type: 'date', cellFilter: 'date:"yyyy-MM-dd HH:mm:ss"', enableFiltering: false
                 	, displayName:'column.header.createDateTime', headerCellFilter:'translate'},
-                { name: 'modifiedDateTime', minWidth: 170, type: 'date', cellFilter: 'date:"yyyy-MM-dd hh:mm:ss"', enableFiltering: false
+                { name: 'modifiedDateTime', minWidth: 170, type: 'date', cellFilter: 'date:"yyyy-MM-dd HH:mm:ss"', enableFiltering: false
                 	, displayName:'column.header.modifiedDateTime', headerCellFilter:'translate'},
                 { name: 'actions', minWidth: 70, enableFiltering: false, cellTemplate: 
             		'<div class="grid-action-cell">'+
@@ -59,39 +59,20 @@ app.controller('CentresCtrl', ['$scope','CentreService','CommonFactory','$transl
    $scope.editMode = false;
    $scope.centreForm = $('#centreForm');
    $scope.responseMessage = $('#responseMessage');
+   $scope.userId = $('#userId') ? $('#userId').val() : null;
    
-	/*var formValidationRules = {
-		fields : {
-			schoolName : {
-				identifier : 'schoolName',
-				rules : [ {
-					type : 'empty',
-					prompt : $filterTranslate('form.validation.required', { fieldName: '{name}' })
-				} ]
-			},
-			schoolPhone : {
-				identifier : 'schoolPhone',
-				rules : [ {
-					type : 'number',
-					prompt : $filterTranslate('views.centre.form.validation.phone.invalid')
-				},{
-					type : 'maxLength[8]',
-					prompt : $filterTranslate('views.centre.form.validation.phone.invalid')
-				}]
-			},
-			schoolFax : {
-				identifier : 'schoolFax',
-				rules : [ {
-					type : 'number',
-					prompt : $filterTranslate('views.centre.form.validation.phone.invalid')
-				},{
-					type : 'maxLength[8]',
-					prompt : $filterTranslate('views.centre.form.validation.phone.invalid')
-				}]
-			}
-		}
-	};*/
+   if ($scope.userId) {
+	   CentreService.getCentreByUserId($scope.userId)
+   		.then( function success(response) {
+			   $scope.editSelectedRow(response.data);
+		   },
+		   function error(response) {
+			   CommonFactory.buildResponseMessage($scope.responseMessage, $filterTranslate(response.data.message), 'error');
+		   });
+   }
 	$('.ui.form').form();
+	
+	
    
    $scope.generateCouponCode = function() {
 	   var uuid = function generateUUID() {
@@ -149,13 +130,12 @@ app.controller('CentresCtrl', ['$scope','CentreService','CommonFactory','$transl
        if ($scope.centreForm != null) {
     	   CentreService.addCentre($scope.centreForm)
              .then (function success(response){
-                 CommonFactory.buildResponseMessage($scope.responseMessage, response.data.message, 'success');
+                 CommonFactory.buildResponseMessage($scope.responseMessage, $filterTranslate(response.data.message), 'success');
                  $scope.getAllCentres();
                  $scope.resetForm();
              },
              function error(response){
-            	 $scope.errorMessage = response.data.message;
-                 CommonFactory.buildResponseMessage($scope.responseMessage, response.data.message, 'error');
+                 CommonFactory.buildResponseMessage($scope.responseMessage, $filterTranslate(response.data.message), 'error');
                  $scope.getAllCentres();
            });
        }
@@ -164,12 +144,14 @@ app.controller('CentresCtrl', ['$scope','CentreService','CommonFactory','$transl
 	$scope.updateCentre = function () {
 		CentreService.updateCentre($scope.centreForm)
           .then(function success(response){
-              CommonFactory.buildResponseMessage($scope.responseMessage, response.data.message, 'success');
+              CommonFactory.buildResponseMessage($scope.responseMessage, $filterTranslate(response.data.message), 'success');
               $scope.getAllCentres();
-              $scope.resetForm();
+              if (!$scope.userId) {
+            	  $scope.resetForm();
+              }
           },
           function error(response){
-              CommonFactory.buildResponseMessage($scope.responseMessage, response.data.message, 'error');
+              CommonFactory.buildResponseMessage($scope.responseMessage, $filterTranslate(response.data.message), 'error');
               $scope.getAllCentres();
           });
     }
@@ -178,11 +160,11 @@ app.controller('CentresCtrl', ['$scope','CentreService','CommonFactory','$transl
    $scope.deleteCentre = function (id) {
 	   CentreService.deleteCentre(id)
           .then (function success(response){
-              CommonFactory.buildResponseMessage($scope.responseMessage, response.data.message, 'success');
+              CommonFactory.buildResponseMessage($scope.responseMessage, $filterTranslate(response.data.message), 'success');
               $scope.getAllCentres();
           },
           function error(response){
-              CommonFactory.buildResponseMessage($scope.responseMessage, response.data.message, 'error');
+              CommonFactory.buildResponseMessage($scope.responseMessage, $filterTranslate(response.data.message), 'error');
               $scope.getAllCentres();
           })
     }
@@ -206,6 +188,13 @@ app.service('CentreService',['$http','CommonFactory', function ($http,CommonFact
         return $http({
           method: 'GET',
           url: 'centres/'+centreId
+        });
+	}
+    
+    this.getCentreByUserId = function getCentre(userId){
+        return $http({
+          method: 'GET',
+          url: 'centres/user/'+userId
         });
 	}
 	

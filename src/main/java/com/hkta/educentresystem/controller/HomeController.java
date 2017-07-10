@@ -13,19 +13,11 @@ public class HomeController {
 	private static final Logger logger = LoggerFactory.getLogger(HomeController.class);
 	
 	private static String VIEW_HOME = "home";
-	private static String VIEW_CONSOLE = "console";
 	
 	@RequestMapping(value = "/home", method = RequestMethod.GET)
 	public ModelAndView getHome() {
 		ModelAndView model = new ModelAndView();
 		model.setViewName(VIEW_HOME);
-		return model;
-	}
-	
-	@RequestMapping(value = "/console", method = RequestMethod.GET)
-	public ModelAndView getConsole() {
-		ModelAndView model = new ModelAndView();
-		model.setViewName(VIEW_CONSOLE);
 		return model;
 	}
 }

@@ -24,9 +24,9 @@ app.controller('UsersCtrl', ['$scope','UsersService','CommonFactory','$translate
                 	headerCellFilter:'translate', cellTemplate:'<div class="ui-grid-cell-contents" ng-if="row.entity.tutorialCentre">{{row.entity.tutorialCentre.schoolName}}</div>' +
                     									'<div class="ui-grid-cell-contents" ng-if="!row.entity.tutorialCentre"></div>'
                 	},
-                { name: 'createDateTime', width: "15%", type: 'date', cellFilter: 'date:"yyyy-MM-dd hh:mm:ss"', enableFiltering: false
+                { name: 'createDateTime', width: "15%", type: 'date', cellFilter: 'date:"yyyy-MM-dd HH:mm:ss"', enableFiltering: false
                 	, displayName:'column.header.createDateTime', headerCellFilter:'translate'},
-                { name: 'modifiedDateTime', width: "15%", type: 'date', cellFilter: 'date:"yyyy-MM-dd hh:mm:ss"', enableFiltering: false
+                { name: 'modifiedDateTime', width: "15%", type: 'date', cellFilter: 'date:"yyyy-MM-dd HH:mm:ss"', enableFiltering: false
                 	, displayName:'column.header.modifiedDateTime', headerCellFilter:'translate'},
                 { name: 'actions', width: "7%", enableFiltering: false, cellTemplate: 
             		'<div class="grid-action-cell">'+
@@ -81,29 +81,6 @@ app.controller('UsersCtrl', ['$scope','UsersService','CommonFactory','$translate
 		select.dropdown("refresh");
     });
 	
-	/* Fail to get i18n message
-	 * var formValidationRules = {
-		fields : {
-			username : {
-				identifier : 'username',
-				rules : [ {
-					type : 'empty',
-					prompt : $filterTranslate('views.user.form.validation.username.required')
-				} ]
-			},
-			password : {
-				identifier : 'password',
-				rules : [ {
-					type : 'empty',
-					prompt : $filterTranslate('views.user.form.validation.password.required')
-				},
-				{
-					type : 'regExp[/^\$.{2}\$.{2}\$.{53}$/]',
-					prompt : 'Please enter a valid password encrypted in bycrypt'
-				}]
-			}
-		}
-	};*/
 	$('.ui.form').form();
    
    $scope.editSelectedRow = function(user) {
@@ -136,13 +113,13 @@ app.controller('UsersCtrl', ['$scope','UsersService','CommonFactory','$translate
        if ($scope.userForm != null) {
     	   UsersService.addUser($scope.userForm)
              .then (function success(response){
-                 CommonFactory.buildResponseMessage($scope.responseMessage, response.data.message, 'success');
+                 CommonFactory.buildResponseMessage($scope.responseMessage, $filterTranslate(response.data.message), 'success');
                  $scope.getAllUsers();
                  $scope.resetForm();
              },
              function error(response){
             	 $scope.errorMessage = response.data.message;
-                 CommonFactory.buildResponseMessage($scope.responseMessage, response.data.message, 'error');
+                 CommonFactory.buildResponseMessage($scope.responseMessage, $filterTranslate(response.data.message), 'error');
                  $scope.getAllUsers();
            });
        }
@@ -151,12 +128,12 @@ app.controller('UsersCtrl', ['$scope','UsersService','CommonFactory','$translate
 	$scope.updateUser = function () {
 		UsersService.updateUser($scope.userForm)
           .then(function success(response){
-              CommonFactory.buildResponseMessage($scope.responseMessage, response.data.message, 'success');
+              CommonFactory.buildResponseMessage($scope.responseMessage, $filterTranslate(response.data.message), 'success');
               $scope.getAllUsers();
               $scope.resetForm();
           },
           function error(response){
-              CommonFactory.buildResponseMessage($scope.responseMessage, response.data.message, 'error');
+              CommonFactory.buildResponseMessage($scope.responseMessage, $filterTranslate(response.data.message), 'error');
               $scope.getAllUsers();
           });
     }
@@ -165,11 +142,11 @@ app.controller('UsersCtrl', ['$scope','UsersService','CommonFactory','$translate
    $scope.deleteUser = function (id) {
 	   UsersService.deleteUser(id)
           .then (function success(response){
-              CommonFactory.buildResponseMessage($scope.responseMessage, response.data.message, 'success');
+              CommonFactory.buildResponseMessage($scope.responseMessage, $filterTranslate(response.data.message), 'success');
               $scope.getAllUsers();
           },
           function error(response){
-              CommonFactory.buildResponseMessage($scope.responseMessage, response.data.message, 'error');
+              CommonFactory.buildResponseMessage($scope.responseMessage, $filterTranslate(response.data.message), 'error');
               $scope.getAllUsers();
           })
     }

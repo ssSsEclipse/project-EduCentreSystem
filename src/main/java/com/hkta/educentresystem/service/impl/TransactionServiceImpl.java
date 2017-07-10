@@ -4,6 +4,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -12,7 +13,7 @@ import com.hkta.educentresystem.repository.TransactionRepository;
 import com.hkta.educentresystem.service.TransactionService;
 
 @Service
-public class TransactionServiceImpl implements TransactionService {
+public class TransactionServiceImpl extends AbstractBaseCrudService<Transaction, Long> implements TransactionService {
 
 	@Autowired
 	private TransactionRepository transactionRepository;
@@ -28,6 +29,11 @@ public class TransactionServiceImpl implements TransactionService {
 				StringUtils.isEmpty(year) ? null : Integer.parseInt(year),
 				new PageRequest(page, size));
 		return result;
+	}
+
+	@Override
+	PagingAndSortingRepository<Transaction, Long> getRepository() {
+		return this.transactionRepository;
 	}
 	
 

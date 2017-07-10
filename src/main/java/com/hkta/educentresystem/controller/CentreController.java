@@ -12,8 +12,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -23,14 +21,14 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.hkta.educentresystem.dto.CustomUserDetails;
 import com.hkta.educentresystem.dto.ResponseMessage;
 import com.hkta.educentresystem.dto.SimpleCentre;
 import com.hkta.educentresystem.dto.SimpleListResponse;
 import com.hkta.educentresystem.entity.Centre;
+import com.hkta.educentresystem.entity.User;
 import com.hkta.educentresystem.exception.ResourceNotFoundException;
-import com.hkta.educentresystem.service.impl.CentreServiceImpl;
-import com.hkta.educentresystem.service.impl.UserServiceImpl;
+import com.hkta.educentresystem.service.CentreService;
+import com.hkta.educentresystem.service.UserService;
 
 @Controller
 @RequestMapping(value = "/centres")
@@ -39,11 +37,11 @@ public class CentreController {
 	private static final Logger logger = LoggerFactory.getLogger(CentreController.class);
 
 	private static String VIEW_CENTRES = "centres";
+	@Autowired
+	private UserService userService;
 
 	@Autowired
-	private CentreServiceImpl centreService;
-	@Autowired
-	private UserServiceImpl userService;
+	private CentreService centreService;
 
 	@RequestMapping(method = RequestMethod.GET)
 	public ModelAndView getPage() {
@@ -89,24 +87,33 @@ public class CentreController {
 		return response;
 	}
 
+	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
 	@ResponseBody
 	public ResponseEntity<?> getCentre(@PathVariable("id") Long id) {
-		if (!isRequestAllowed(id)) {
-			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ResponseMessage("Not allowed to get other Centre"));
-		}
 		Centre centre = centreService.findOne(id);
 		return ResponseEntity.status(HttpStatus.OK).body(centre);
+	}
+	
+	@RequestMapping(value = "/user/{userId}", method = RequestMethod.GET)
+	@ResponseBody
+	public ResponseEntity<?> getCentreByUserId(@PathVariable("userId") Long userId) {
+		User user = userService.findOne(userId);
+		
+		if (!centreService.isRequestAllowed(user.getTutorialCentre() == null ? null : user.getTutorialCentre().getId())) {
+			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ResponseMessage("views.centre.response.message.error.get.notallowed"));
+		}
+		return ResponseEntity.status(HttpStatus.OK).body(user.getTutorialCentre());
 	}
 
 	@RequestMapping(method = RequestMethod.PATCH )
 	@ResponseBody
 	public ResponseEntity<ResponseMessage> updateCentre(@RequestBody Centre centre) {
-		if (!isRequestAllowed(centre.getId())) {
-			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ResponseMessage("Not allowed to modify other Centre"));
+		if (!centreService.isRequestAllowed(centre.getId())) {
+			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ResponseMessage("views.centre.response.message.error.update.notallowed"));
 		}
 		Centre updatedCentre = centreService.save(centre);
-		return ResponseEntity.status(HttpStatus.ACCEPTED).body(new ResponseMessage(updatedCentre.getId(), Centre.class.getName(), "Centre updated!"));
+		return ResponseEntity.status(HttpStatus.ACCEPTED).body(new ResponseMessage(updatedCentre.getId(), Centre.class.getSimpleName(), "views.centre.response.message.success.update"));
 	}
 
 	@PreAuthorize("hasRole('ROLE_ADMIN')")
@@ -116,9 +123,9 @@ public class CentreController {
 		Centre Centre = centreService.findOne(id);
 		if (Centre != null) {
 			centreService.delete(Centre);
-			return ResponseEntity.status(HttpStatus.ACCEPTED).body(new ResponseMessage(id, Centre.class.getName(), "Centre deleted!"));
+			return ResponseEntity.status(HttpStatus.ACCEPTED).body(new ResponseMessage(id, Centre.class.getSimpleName(), "views.centre.response.message.success.delete"));
 		}
-		return ResponseEntity.status(HttpStatus.NOT_MODIFIED).body(new ResponseMessage("Unable to delete Centre"));
+		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseMessage("views.centre.response.message.delete.create"));
 	} 
 
 	@PreAuthorize("hasRole('ROLE_ADMIN')")
@@ -127,22 +134,9 @@ public class CentreController {
 	public ResponseEntity<ResponseMessage> addCentre(@RequestBody Centre centre) {
 		Centre newCentre = centreService.save(centre);
 		if (newCentre == null) {
-			return ResponseEntity.status(HttpStatus.NOT_MODIFIED).body(new ResponseMessage("Unable to add Centre"));
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseMessage("views.centre.response.message.error.create"));
 		}
-		return ResponseEntity.status(HttpStatus.CREATED).body(new ResponseMessage(newCentre.getId(), Centre.class.getName(),  "Centre created!"));
-	}
-	
-	private boolean isRequestAllowed(Long requestingCentreId) {
-		CustomUserDetails userDetails = (CustomUserDetails)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		if (userDetails.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_ADMIN"))) {
-			return true;
-		}else if (userDetails.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_USER"))) {
-			Centre userCentre = userService.findOne(userDetails.getId()).getTutorialCentre();
-			if (userCentre != null && userCentre.getId() == requestingCentreId) {
-				return true;
-			}
-		}
-		return false;
+		return ResponseEntity.status(HttpStatus.CREATED).body(new ResponseMessage(newCentre.getId(), Centre.class.getSimpleName(),  "views.centre.response.message.success.create"));
 	}
 
 }

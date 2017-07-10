@@ -1,7 +1,6 @@
 package com.hkta.educentresystem.dto;
 
 import java.io.Serializable;
-import java.util.Date;
 
 public class UserDto implements Serializable{
 	/**
@@ -20,10 +19,6 @@ public class UserDto implements Serializable{
 	private String role;
 
 	private Long tutorialCentreId;
-	
-	private Date createDateTime;
-
-	private Date modifiedDateTime;
 
 	public Long getId() {
 		return id;
@@ -69,17 +64,5 @@ public class UserDto implements Serializable{
 		this.tutorialCentreId = tutorialCentreId;
 	}
 
-	public Date getCreateDateTime() {
-		return createDateTime;
-	}
-
-	public void setCreateDateTime(Date createDateTime) {
-		this.createDateTime = createDateTime;
-	}
-
-	public Date getModifiedDateTime() {
-		return modifiedDateTime;
-	}
-	
 	
 }

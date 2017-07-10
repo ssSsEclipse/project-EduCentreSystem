@@ -12,6 +12,7 @@ app.factory('CommonFactory', function() {
 				$(messageDiv).transition('hide');
 			}
 			$(messageDiv).html(message).removeClass('error success').addClass(type).transition('slide down');
+			$("html, body").animate({ scrollTop: 0 }, "fast");
 		},
 		resetResponseMessage: function(messageDiv) {
 			$(messageDiv).html('').removeClass('error success').transition('hide');
@@ -89,5 +90,5 @@ app.config(['$translateProvider', function ($translateProvider) {
       suffix: '.json'
     });
 
-    $translateProvider.preferredLanguage('en');
+    $translateProvider.preferredLanguage('zh');
   }]);

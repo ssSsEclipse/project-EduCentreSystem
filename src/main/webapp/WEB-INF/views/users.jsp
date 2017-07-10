@@ -35,7 +35,7 @@
 		<form class="ui form attached fluid segment" id="userForm">
 			<div id="responseMessage" class="ui message hidden"></div>
 			<div class="ui error message"></div>
-			<input type="hidden" name="id"> <input type="hidden" name="createDateTime">
+			<input type="hidden" name="id">
 			<div class="two fields">
 				<div class="field">
 					<label>{{'views.user.username' | translate}}</label> <input type="text" placeholder="{{'views.user.username' | translate}}" name="username">

@@ -9,30 +9,6 @@ app.controller('TransactionsCtrl', ['$scope','TransactionsService','$translate',
    };
 	
 	$('.ui.dropdown').dropdown();
-	$('.ui.form').form({
-		fields : {
-			year : {
-				identifier : 'year',
-				rules : [ {
-					type : 'empty',
-					prompt : $filterTranslate('views.user.form.validation.year.required')
-				}, {
-					type : 'number',
-					prompt : $filterTranslate('views.user.form.validation.year.invalid')
-				}, {
-					type : 'regExp[/^[12][0-9]{3}$/]',
-					prompt : $filterTranslate('views.user.form.validation.year.invalid')
-				} ]
-			},
-			month : {
-				identifier : 'month',
-				rules : [ {
-					type : 'empty',
-					prompt : $filterTranslate('views.user.form.validation.month.required')
-				} ]
-			}
-		}
-	});
 
    $scope.getTransactions = function(){
 	   TransactionsService.getTransactions(paginationOptions.pageNumber, paginationOptions.pageSize).success(function(data){
@@ -47,10 +23,11 @@ app.controller('TransactionsCtrl', ['$scope','TransactionsService','$translate',
     enableColumnMenus:false,
 	useExternalPagination: true,
     columnDefs: [
+      { name: 'id', displayName:'views.transaction.id', headerCellFilter:'translate', width: "7%" },
       { name: 'recordTime', displayName:'views.transaction.recordTime', headerCellFilter:'translate'
-    	  , width: "14%", type: 'date', cellFilter: 'date:"yyyy-MM-dd hh:mm:ss"' },
+    	  , width: "14%", type: 'date', cellFilter: 'date:"yyyy-MM-dd HH:mm:ss"' },
       { name: 'customerName', displayName:'views.transaction.customerName', headerCellFilter:'translate', width: "12%" },
-      { name: 'content', displayName:'views.transaction.content', headerCellFilter:'translate', width: "54%" },
+      { name: 'content', displayName:'views.transaction.content', headerCellFilter:'translate', width: "47%" },
       { name: 'amount', displayName:'views.transaction.amount', headerCellFilter:'translate', width: "10%", cellFilter: 'currency' },
       { name: 'commission', displayName:'views.transaction.commission', headerCellFilter:'translate', width: "10%", cellFilter: 'currency' }
     ],

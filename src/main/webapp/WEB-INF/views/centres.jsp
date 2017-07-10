@@ -34,10 +34,14 @@
 			<p>{{'views.centre.editing' | translate}} {{editingCentre}}</p>
 		</div>
 		<form class="ui form attached fluid segment" id="centreForm">
+			<sec:authentication property="principal.id" var="userId"  />
+			<sec:authorize access="hasRole('ROLE_USER')">
+				<input type="hidden" value="${userId}" id="userId" ng-model="userId"></a>
+			</sec:authorize>
 			<div id="responseMessage" class="ui message hidden"></div>
 			<div class="ui error message"></div>
 			<input type="hidden" name="id"> <input type="hidden" name="createDateTime">
-			<h4 class="ui dividing header">{{'views.centre.section.centre.info' | translate}}</h4>
+			<h4 class="ui dividing header"><i class="university icon"></i> {{'views.centre.section.centre.info' | translate}}</h4>
 			<div class="field">
 				<label>{{'views.centre.schoolName' | translate}}</label> <input type="text" placeholder="{{'views.centre.schoolName' | translate}}" name="schoolName">
 			</div>
@@ -60,7 +64,7 @@
 					<label>{{'views.centre.website' | translate}}</label> <input type="text" placeholder="{{'views.centre.website' | translate}}" name="website">
 				</div>
 			</div>
-			<h4 class="ui dividing header">{{'views.centre.section.pic.info' | translate}}</h4>
+			<h4 class="ui dividing header"><i class="user icon"></i> {{'views.centre.section.pic.info' | translate}}</h4>
 			<div class="two fields">
 				<div class="field">
 					<label>{{'views.centre.institutionPic' | translate}}</label> <input type="text" placeholder="{{'views.centre.institutionPic.placeholder' | translate}}" name="institutionPic">
@@ -69,7 +73,7 @@
 					<label>{{'views.centre.picMobile' | translate}}</label> <input type="text" placeholder="{{'views.centre.picMobile.placeholder' | translate}}" name="picMobile">
 				</div>
 			</div>
-			<h4 class="ui dividing header">{{'views.centre.section.bank.info' | translate}}</h4>
+			<h4 class="ui dividing header"><i class="dollar icon"></i> {{'views.centre.section.bank.info' | translate}}</h4>
 			<div class="three fields">
 				<div class="field">
 					<label>{{'views.centre.bankName' | translate}}</label> <input type="text" placeholder="{{'views.centre.bankName' | translate}}" name="bankName">
@@ -81,13 +85,13 @@
 					<label>{{'views.centre.accountNumber' | translate}}</label> <input type="text" placeholder="{{'views.centre.accountNumber' | translate}}" name="accountNumber">
 				</div>
 			</div>
-			<h4 class="ui dividing header">{{'views.centre.section.discount.info' | translate}}</h4>
+			<h4 class="ui dividing header"><i class="money icon"></i> {{'views.centre.section.discount.info' | translate}}</h4>
 			<div class="two fields">
 				<div class="field">
 					<label>{{'views.centre.couponCode' | translate}}</label>
-					<div class="ui action input">
+					<div class="ui action input" ng-class="userId ? 'disabled':''">
 						<input type="text" placeholder="{{'views.centre.couponCode' | translate}}" name="couponCode" readonly="" id="couponCode">
-						<button class="ui button" ng-click="generateCouponCode()"><i class="refresh icon"></i>{{'button.generate' | translate}}</button>
+						<button class="ui button" ng-hide="userId" ng-click="generateCouponCode()"><i class="refresh icon"></i>{{'button.generate' | translate}}</button>
 					</div>
 				</div>
 				<div class="field">
@@ -106,7 +110,7 @@
 					<i class="edit icon"></i>{{'button.update' | translate}}
 				</div>
 			</button>
-			<button class="ui reset button" ng-click="editMode = false">
+			<button class="ui reset button" ng-click="editMode = false" ng-hide="userId">
 				<i class="erase icon"></i>{{'button.reset' | translate}}
 			</button>
 		</form>

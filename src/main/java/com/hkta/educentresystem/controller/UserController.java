@@ -19,7 +19,7 @@ import com.hkta.educentresystem.dto.ResponseMessage;
 import com.hkta.educentresystem.dto.UserDto;
 import com.hkta.educentresystem.entity.User;
 import com.hkta.educentresystem.exception.ResourceNotFoundException;
-import com.hkta.educentresystem.service.impl.UserServiceImpl;
+import com.hkta.educentresystem.service.UserService;
 
 @Controller
 @RequestMapping(value = "/users")
@@ -30,7 +30,7 @@ public class UserController {
 	private static String VIEW_USERS = "users";
 
 	@Autowired
-	private UserServiceImpl userService;
+	private UserService userService;
 
 	@RequestMapping(method = RequestMethod.GET)
 	public ModelAndView getPage() {
@@ -59,11 +59,11 @@ public class UserController {
 	@RequestMapping(method = RequestMethod.PATCH )
 	@ResponseBody
 	public ResponseEntity<ResponseMessage> updateUser(@RequestBody UserDto userDto) {
-		User updatedUser = userService.save(userDto);
+		User updatedUser = userService.saveDto(userDto);
 		if (updatedUser != null) {
-			return ResponseEntity.status(HttpStatus.ACCEPTED).body(new ResponseMessage(updatedUser.getId(), User.class.getName(), "User updated!"));
+			return ResponseEntity.status(HttpStatus.ACCEPTED).body(new ResponseMessage(updatedUser.getId(), User.class.getSimpleName(), "views.user.response.message.success.update"));
 		}
-		return ResponseEntity.status(HttpStatus.NOT_MODIFIED).body(new ResponseMessage("Unable to update user"));
+		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseMessage("views.user.response.message.error.update"));
 	}
 	
 	@RequestMapping(value="/{id}", method = RequestMethod.DELETE )
@@ -72,9 +72,9 @@ public class UserController {
 		User user = userService.findOne(id);
 		if (user != null) {
 			userService.delete(user);
-			return ResponseEntity.status(HttpStatus.ACCEPTED).body(new ResponseMessage(id, User.class.getName(), "User deleted!"));
+			return ResponseEntity.status(HttpStatus.ACCEPTED).body(new ResponseMessage(id, User.class.getSimpleName(), "views.user.response.message.success.delete"));
 		}
-		return ResponseEntity.status(HttpStatus.NOT_MODIFIED).body(new ResponseMessage("Unable to delete user"));
+		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseMessage("views.user.response.message.error.delete"));
 	} 
 
 	@RequestMapping(method = RequestMethod.POST)
@@ -82,13 +82,13 @@ public class UserController {
 	public ResponseEntity<ResponseMessage> addUser(@RequestBody UserDto userDto) {
 		User existingUser = userService.findByUsername(userDto.getUsername());
 		if (existingUser != null) {
-			return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(new ResponseMessage("Username already exists"));
+			return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(new ResponseMessage("views.user.response.message.error.user.already.exists"));
 		}
-		User newUser = userService.save(userDto);
+		User newUser = userService.saveDto(userDto);
 		if (newUser == null) {
-			return ResponseEntity.status(HttpStatus.NOT_MODIFIED).body(new ResponseMessage("Unable to add user"));
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseMessage("views.user.response.message.error.create"));
 		}
-		return ResponseEntity.status(HttpStatus.CREATED).body(new ResponseMessage(newUser.getId(), User.class.getName(),  "User created!"));
+		return ResponseEntity.status(HttpStatus.CREATED).body(new ResponseMessage(newUser.getId(), User.class.getSimpleName(),  "views.user.response.message.success.create"));
 	}
 
 }
