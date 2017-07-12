@@ -1,9 +1,35 @@
 var app = angular.module('app', [ 'ui.grid', 'ui.grid.pagination',
-		'ui.grid.resizeColumns', 'pascalprecht.translate' ]);
+		'ui.grid.resizeColumns', 'pascalprecht.translate', 'ngRoute' ]);
 
 
 app.factory('CommonFactory', function() {
 	return {
+		confirmDelete : function(modal, deleteCallback, args) {
+			$(modal)
+			    .modal({
+			      closable  : false,
+			      onDeny    : function(){
+			        
+			      },
+			      onApprove : function() {
+					deleteCallback.apply(this, args);
+			      }
+			    })
+			    .modal('show')
+			  ;
+			  
+		},
+		hasRole : function(user, role) {
+			  var result = false;
+			  if (user) {
+				  angular.forEach(user.authorities, function(item) {
+					  if (item.authority && item.authority === role) {
+						  result = true;
+					  }
+				  });
+			  }
+			  return result;
+		},
 		resetForm : function(form) {
 			$(form).form('reset');
 		},
@@ -43,6 +69,8 @@ app.factory('CommonFactory', function() {
 							$(element)
 							  .dropdown('set selected', user[name]);
 						}
+					} else if (type == 'file') {
+						console.log(user[name]);
 					} else {
 						element.value = user[name];
 					}
@@ -74,7 +102,9 @@ app.factory('CommonFactory', function() {
 				if (name) {
 					if (type == 'checkbox') {
 						obj[name] = element.checked;
-					} else {
+					}else if (type == 'file') {
+						//obj[name] = element[0];
+					}else {
 						obj[name] = value;
 					}
 				}
@@ -84,11 +114,29 @@ app.factory('CommonFactory', function() {
 	}
 });
 
-app.config(['$translateProvider', function ($translateProvider) {
+app.config(['$translateProvider', '$routeProvider', function ($translateProvider, $routeProvider) {
     $translateProvider.useStaticFilesLoader({
       prefix: 'resources/locales/locale-',
       suffix: '.json'
     });
 
     $translateProvider.preferredLanguage('zh');
+    
+	$routeProvider
+		.when('/user', {
+			templateUrl : 'resources/views/users.html',
+			controller  : 'UsersCtrl',
+			roles : ['ROLE_ADMIN']
+		})
+		.when('/centre', {
+			templateUrl : 'resources/views/centres.html',
+			controller  : 'CentresCtrl',
+			roles : ['ROLE_ADMIN','ROLE_USER']
+		})
+		.when('/transaction', {
+			templateUrl : 'resources/views/transactions.html',
+			controller  : 'TransactionsCtrl',
+			roles : ['ROLE_USER']
+		})
+		;
   }]);

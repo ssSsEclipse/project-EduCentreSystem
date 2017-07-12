@@ -1,0 +1,112 @@
+
+<div class="ui main container">
+	<h1 class="ui dividing header">{{'views.header.centre' | translate}}</h1>
+
+	<div class="ui attached message" ng-show="editMode">
+		<p>{{'views.centre.editing' | translate}} {{editingCentre}}</p>
+	</div>
+	<form class="ui form attached fluid segment" id="centreForm">
+		<div id="responseMessage" class="ui message hidden"></div>
+		<div class="ui error message"></div>
+		<input type="hidden" name="id"> <input type="hidden" name="createDateTime">
+		<h4 class="ui dividing header">
+			<i class="university icon"></i> {{'views.centre.section.centre.info' | translate}}
+		</h4>
+		<div class="fields">
+			<div class="eight wide field">
+				<label>{{'views.centre.schoolName' | translate}}</label> <input type="text" placeholder="{{'views.centre.schoolName' | translate}}" name="schoolName">
+			</div>
+			<div class="four wide field">
+				<label>{{'views.centre.logo' | translate}}</label>
+				<div class="ui action input">
+					<input type="text" placeholder="{{'views.centre.logo' | translate}}" readonly name="fileName" > <input type="file" name="logo" style="display: none;">
+					<div class="ui icon button" ng-click="openFile()">
+						<i class="attach icon"></i>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="field">
+			<label>{{'views.centre.schoolAddress' | translate}}</label> <input type="text" placeholder="{{'views.centre.schoolAddress' | translate}}" name="schoolAddress">
+		</div>
+		<div class="two fields">
+			<div class="field">
+				<label>{{'views.centre.schoolPhone' | translate}}</label> <input type="text" placeholder="{{'views.centre.schoolPhone' | translate}}" name="schoolPhone">
+			</div>
+			<div class="field">
+				<label>{{'views.centre.schoolFax' | translate}}</label> <input type="text" placeholder="{{'views.centre.schoolFax' | translate}}" name="schoolFax">
+			</div>
+		</div>
+		<div class="two fields">
+			<div class="field">
+				<label>{{'views.centre.email' | translate}}</label> <input type="email" placeholder="{{'views.centre.email' | translate}}" name="email">
+			</div>
+			<div class="field">
+				<label>{{'views.centre.website' | translate}}</label> <input type="text" placeholder="{{'views.centre.website' | translate}}" name="website">
+			</div>
+		</div>
+		<h4 class="ui dividing header">
+			<i class="user icon"></i> {{'views.centre.section.pic.info' | translate}}
+		</h4>
+		<div class="two fields">
+			<div class="field">
+				<label>{{'views.centre.institutionPic' | translate}}</label> <input type="text" placeholder="{{'views.centre.institutionPic.placeholder' | translate}}" name="institutionPic">
+			</div>
+			<div class="field">
+				<label>{{'views.centre.picMobile' | translate}}</label> <input type="text" placeholder="{{'views.centre.picMobile.placeholder' | translate}}" name="picMobile">
+			</div>
+		</div>
+		<h4 class="ui dividing header">
+			<i class="dollar icon"></i> {{'views.centre.section.bank.info' | translate}}
+		</h4>
+		<div class="three fields">
+			<div class="field">
+				<label>{{'views.centre.bankName' | translate}}</label> <input type="text" placeholder="{{'views.centre.bankName' | translate}}" name="bankName">
+			</div>
+			<div class="field">
+				<label>{{'views.centre.accountName' | translate}}</label> <input type="text" placeholder="{{'views.centre.accountName' | translate}}" name="accountName">
+			</div>
+			<div class="field">
+				<label>{{'views.centre.accountNumber' | translate}}</label> <input type="text" placeholder="{{'views.centre.accountNumber' | translate}}" name="accountNumber">
+			</div>
+		</div>
+		<h4 class="ui dividing header">
+			<i class="money icon"></i> {{'views.centre.section.discount.info' | translate}}
+		</h4>
+		<div class="two fields">
+			<div class="field">
+				<label>{{'views.centre.couponCode' | translate}}</label> <input type="text" placeholder="{{'views.centre.couponCode' | translate}}" name="couponCode" id="couponCode">
+				<!-- <div class="ui action input" ng-class="userId ? 'disabled':''">
+						<input type="text" placeholder="{{'views.centre.couponCode' | translate}}" name="couponCode" readonly="" id="couponCode">
+						<button class="ui button" ng-show="hasRole('ROLE_ADMIN')" ng-click="generateCouponCode()"><i class="refresh icon"></i>{{'button.generate' | translate}}</button>
+					</div> -->
+			</div>
+			<div class="field">
+				<label>{{'views.centre.discountComissionPdf' | translate}}</label>
+				<div class="ui action input">
+					<input type="text" placeholder="{{'views.centre.discountComissionPdf' | translate}}" name="discountComissionPdf" readonly="" id="discountComissionPdf" value="test.pdf">
+					<button class="ui button" onclick="window.open('resources/pdf/'+$('#discountComissionPdf').val());">
+						<i class="download icon"></i>{{'button.download' | translate}}
+					</button>
+				</div>
+			</div>
+		</div>
+		<button class="ui button" ng-click="submitForm()" ng-class="editMode ? 'green':'primary'">
+			<div ng-if="!editMode">
+				<i class="add user icon"></i>{{'button.create' | translate}}
+			</div>
+			<div ng-if="editMode">
+				<i class="edit icon"></i>{{'button.update' | translate}}
+			</div>
+		</button>
+		<button class="ui reset button" ng-click="editMode = false" ng-hide="userId">
+			<i class="erase icon"></i>{{'button.reset' | translate}}
+		</button>
+	</form>
+
+	<h1 class="ui dividing header" ng-show="hasRole('ROLE_ADMIN')">{{'views.subheader.list' | translate}}</h1>
+	<div  ng-show="hasRole('ROLE_ADMIN')">
+		<div ui-grid="gridOptions" external-scopes="$scope" ui-grid-pagination class="grid"></div>
+	</div>
+</div>
+

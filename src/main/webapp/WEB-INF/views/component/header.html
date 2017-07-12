@@ -1,0 +1,23 @@
+
+
+<div class="ui fixed inverted menu">
+	<div class="ui container">
+		<a href="#" class="header item"><i class="circular inverted teal book icon"></i>{{'views.header.appname' | translate}}</a>
+		<div ng-show="hasRole('ROLE_ADMIN')">
+			<a href="#user" class="item" translate="views.header.user"></a>
+		</div>
+		<a href="centre" class="item" translate="views.header.centre"></a>
+		<div ng-show="hasRole('ROLE_USER')">
+			<a href="#transaction" class="item" translate="views.header.transaction"></a>
+		</div>
+		<div class="right menu">
+			<div class="ui simple dropdown item">
+				{{ 'LOCALE_LANGUAGE' | translate }} <i class="dropdown icon"></i>
+				<div class="menu">
+					<a class="item" href="#" ng-click="changeLanguage('en')" translate="LOCALE_LANG_EN"></a> <a class="item" href="#" ng-click="changeLanguage('zh')" translate="LOCALE_LANG_ZH"></a>
+				</div>
+			</div>
+			<a href="logout" class="ui item"><i class="sign out icon"></i>{{'views.header.logout' | translate}}</a>
+		</div>
+	</div>
+</div>

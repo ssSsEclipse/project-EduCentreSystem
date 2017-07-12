@@ -12,8 +12,9 @@ app.controller('TransactionsCtrl', ['$scope','TransactionsService','$translate',
 
    $scope.getTransactions = function(){
 	   TransactionsService.getTransactions(paginationOptions.pageNumber, paginationOptions.pageSize).success(function(data){
-		  $scope.gridOptions.data = data.content;
-	 	  $scope.gridOptions.totalItems = data.totalElements;
+		  $scope.gridOptions.data = data.result.content;
+	 	  $scope.gridOptions.totalItems = data.result.totalElements;
+	 	  $scope.grandTotal = data.grandTotal;
 	   });    
 	}
    
@@ -21,13 +22,16 @@ app.controller('TransactionsCtrl', ['$scope','TransactionsService','$translate',
     paginationPageSizes: [5, 10, 20],
     paginationPageSize: paginationOptions.pageSize,
     enableColumnMenus:false,
+	enableFiltering: true,
 	useExternalPagination: true,
     columnDefs: [
       { name: 'id', displayName:'views.transaction.id', headerCellFilter:'translate', width: "7%" },
       { name: 'recordTime', displayName:'views.transaction.recordTime', headerCellFilter:'translate'
     	  , width: "14%", type: 'date', cellFilter: 'date:"yyyy-MM-dd HH:mm:ss"' },
       { name: 'customerName', displayName:'views.transaction.customerName', headerCellFilter:'translate', width: "12%" },
-      { name: 'content', displayName:'views.transaction.content', headerCellFilter:'translate', width: "47%" },
+      { name: 'content', displayName:'views.transaction.content', headerCellFilter:'translate', width: "27%" },,
+      { name: 'chequeIssuedDate', displayName:'views.transaction.chequeIssuedDate', headerCellFilter:'translate', width: "10%", type: 'date', cellFilter: 'date:"yyyy-MM-dd"' },
+      { name: 'chequeId', displayName:'views.transaction.chequeId', headerCellFilter:'translate', width: "10%" },
       { name: 'amount', displayName:'views.transaction.amount', headerCellFilter:'translate', width: "10%", cellFilter: 'currency' },
       { name: 'commission', displayName:'views.transaction.commission', headerCellFilter:'translate', width: "10%", cellFilter: 'currency' }
     ],
@@ -38,8 +42,9 @@ app.controller('TransactionsCtrl', ['$scope','TransactionsService','$translate',
           paginationOptions.pageSize = pageSize;
           
           TransactionsService.getTransactions(newPage,pageSize).success(function(data){
-        	  $scope.gridOptions.data = data.content;
-         	  $scope.gridOptions.totalItems = data.totalElements;
+        	  $scope.gridOptions.data = data.result.content;
+         	  $scope.gridOptions.totalItems = data.result.totalElements;
+    	 	  $scope.grandTotal = data.grandTotal;
           });
         });
      }

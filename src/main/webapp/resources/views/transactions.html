@@ -1,38 +1,6 @@
-<!doctype html>
-<html ng-app="app">
-<head>
-<title>{{'views.header.transaction' | translate}}</title>
-<link rel="stylesheet" type="text/css" href="webjars/Semantic-UI/2.2.10/semantic.min.css" charset="UTF-8">
-<script src="webjars/jquery/3.1.1/jquery.min.js"></script>
-<script src="webjars/Semantic-UI/2.2.10/semantic.min.js"></script>
-
-<link rel="stylesheet" href="webjars/angular-ui-grid/4.0.6/ui-grid.min.css">
-<script src="webjars/angularjs/1.5.6/angular.min.js"></script>
-<script src="webjars/angular-ui-grid/4.0.6/ui-grid.min.js"></script>
-<script src="webjars/angular-translate/2.13.1/angular-translate.min.js"></script>
-<script src="webjars/angular-translate-loader-url/2.13.1/angular-translate-loader-url.min.js"></script>
-<script src="webjars/angular-translate-loader-static-files/2.13.1/angular-translate-loader-static-files.min.js"></script>
-
-<script src="resources/scripts/angular/app.js"></script>
-<script src="resources/scripts/angular/controllers/appCtrl.js"></script>
-<script src="resources/scripts/angular/controllers/components/transactions.js"></script>
-<style>
-.grid {
-	height: 400px;
-}
-
-.main {
-	width: 900px;
-}
-</style>
-</head>
-<body ng-controller="AppCtrl">
-	<jsp:include page="component/header.jsp" />
-
-	<div class="ui main container" ng-controller="TransactionsCtrl">
+	<div class="ui main container" ng-show="hasRole('ROLE_USER')">
 		<h1 class="ui dividing header">{{'views.header.transaction' | translate}}</h1>
 
-		<%-- Search Form --%>
 		<form class="ui form segment" id="searchTransactionForm">
 			<div class="fields">
 				<div class="eight wide field">
@@ -40,8 +8,23 @@
 					<div class="two fields">
 						<div class="inline field">
 							<label>{{'views.transaction.month' | translate}}</label>
-							<div class="ui search selection dropdown">
-								<input type="hidden" name="month"> <i class="dropdown icon"></i>
+							 <select class="ui search dropdown">
+								<option value=""></option>
+								<option value="1">1</option>
+								<option value="2">2</option>
+								<option value="3">3</option>
+								<option value="4">4</option>
+								<option value="5">5</option>
+								<option value="6">6</option>
+								<option value="7">7</option>
+								<option value="8">8</option>
+								<option value="9">9</option>
+								<option value="10">10</option>
+								<option value="11">11</option>
+								<option value="12">12</option>
+							</select>
+						<!-- <div class="ui search selection dropdown">
+								<input type="hidden" name="month" value=""> <i class="dropdown icon"></i>
 								<div class="default text"></div>
 								<div class="menu">
 									<div class="item" data-value="1">1</div>
@@ -57,7 +40,7 @@
 									<div class="item" data-value="11">11</div>
 									<div class="item" data-value="12">12</div>
 								</div>
-							</div>
+							</div> -->
 						</div>
 						<div class="inline field">
 							<label>{{'views.transaction.year' | translate}}</label> <input type="text" name="year" maxlength="4">
@@ -75,7 +58,6 @@
 		<div>
 			<div id="grid1" ui-grid="gridOptions" ui-grid-pagination class="grid"></div>
 		</div>
+		<h4 class="ui header">{{'views.transaction.grandTotal' | translate}} : {{ grandTotal | currency }}</h4>
 	</div>
 
-</body>
-</html>

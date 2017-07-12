@@ -5,6 +5,8 @@ import java.util.Collection;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 public class CustomUserDetails extends User {
 
 	/**
@@ -21,5 +23,39 @@ public class CustomUserDetails extends User {
 
 	public Long getId() {
 		return id;
+	}
+
+	public Collection<GrantedAuthority> getAuthorities() {
+		return super.getAuthorities();
+	}
+
+	@JsonIgnore
+	public String getPassword() {
+		return super.getPassword();
+	}
+
+	@JsonIgnore
+	public String getUsername() {
+		return super.getUsername();
+	}
+
+	@JsonIgnore
+	public boolean isEnabled() {
+		return super.isEnabled();
+	}
+
+	@JsonIgnore
+	public boolean isAccountNonExpired() {
+		return super.isAccountNonExpired();
+	}
+
+	@JsonIgnore
+	public boolean isAccountNonLocked() {
+		return super.isAccountNonLocked();
+	}
+
+	@JsonIgnore
+	public boolean isCredentialsNonExpired() {
+		return super.isCredentialsNonExpired();
 	}
 }

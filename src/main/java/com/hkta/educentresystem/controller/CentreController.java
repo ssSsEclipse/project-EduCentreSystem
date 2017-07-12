@@ -1,5 +1,6 @@
 package com.hkta.educentresystem.controller;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -12,15 +13,18 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.multipart.MultipartFile;
 
+import com.hkta.educentresystem.dto.CustomUserDetails;
 import com.hkta.educentresystem.dto.ResponseMessage;
 import com.hkta.educentresystem.dto.SimpleCentre;
 import com.hkta.educentresystem.dto.SimpleListResponse;
@@ -36,19 +40,11 @@ public class CentreController {
 
 	private static final Logger logger = LoggerFactory.getLogger(CentreController.class);
 
-	private static String VIEW_CENTRES = "centres";
 	@Autowired
 	private UserService userService;
 
 	@Autowired
 	private CentreService centreService;
-
-	@RequestMapping(method = RequestMethod.GET)
-	public ModelAndView getPage() {
-		ModelAndView model = new ModelAndView();
-		model.setViewName(VIEW_CENTRES);
-		return model;
-	}
 	
 	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	@RequestMapping(value = { "/list" }, method = RequestMethod.GET)
@@ -95,10 +91,11 @@ public class CentreController {
 		return ResponseEntity.status(HttpStatus.OK).body(centre);
 	}
 	
-	@RequestMapping(value = "/user/{userId}", method = RequestMethod.GET)
+	@RequestMapping(value = "/user", method = RequestMethod.GET)
 	@ResponseBody
-	public ResponseEntity<?> getCentreByUserId(@PathVariable("userId") Long userId) {
-		User user = userService.findOne(userId);
+	public ResponseEntity<?> getCentreByUserId() {
+		CustomUserDetails userDetails = (CustomUserDetails)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		User user = userService.findOne(userDetails.getId());
 		
 		if (!centreService.isRequestAllowed(user.getTutorialCentre() == null ? null : user.getTutorialCentre().getId())) {
 			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ResponseMessage("views.centre.response.message.error.get.notallowed"));
@@ -129,9 +126,10 @@ public class CentreController {
 	} 
 
 	@PreAuthorize("hasRole('ROLE_ADMIN')")
-	@RequestMapping(method = RequestMethod.POST)
+	@RequestMapping(method = RequestMethod.POST, consumes = {"multipart/form-data"})
 	@ResponseBody
-	public ResponseEntity<ResponseMessage> addCentre(@RequestBody Centre centre) {
+	public ResponseEntity<ResponseMessage> addCentre(@RequestPart("file") MultipartFile file, @RequestPart("centre") Centre centre) throws IOException {
+		centre.setLogo(file.getBytes());
 		Centre newCentre = centreService.save(centre);
 		if (newCentre == null) {
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseMessage("views.centre.response.message.error.create"));

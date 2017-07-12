@@ -6,4 +6,5 @@ import com.hkta.educentresystem.entity.User;
 public interface UserService extends BaseCrudService<User, Long>{
 	User findByUsername(String username);
 	User saveDto(UserDto userDto);
+	String encryptPassword(String plaintext);
 }

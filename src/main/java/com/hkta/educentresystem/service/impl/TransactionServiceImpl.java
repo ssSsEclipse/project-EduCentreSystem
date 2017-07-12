@@ -1,5 +1,8 @@
 package com.hkta.educentresystem.service.impl;
 
+import java.math.BigDecimal;
+import java.util.List;
+
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -36,5 +39,13 @@ public class TransactionServiceImpl extends AbstractBaseCrudService<Transaction,
 		return this.transactionRepository;
 	}
 	
-
+	@Override
+	public BigDecimal getGrandTotal(List<Transaction> results) {
+		BigDecimal grandTotal = BigDecimal.ZERO;
+		
+		for (Transaction transaction : results) {
+			grandTotal = grandTotal.add(transaction.getCommission());
+		}
+		return grandTotal;
+	}
 }

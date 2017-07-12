@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.servlet.ModelAndView;
 
 import com.hkta.educentresystem.dto.ResponseMessage;
 import com.hkta.educentresystem.dto.UserDto;
@@ -27,17 +26,8 @@ public class UserController {
 
 	private static final Logger logger = LoggerFactory.getLogger(UserController.class);
 
-	private static String VIEW_USERS = "users";
-
 	@Autowired
 	private UserService userService;
-
-	@RequestMapping(method = RequestMethod.GET)
-	public ModelAndView getPage() {
-		ModelAndView model = new ModelAndView();
-		model.setViewName(VIEW_USERS);
-		return model;
-	}
 
 	@RequestMapping(value = { "/list" }, method = RequestMethod.GET)
 	@ResponseBody
@@ -59,6 +49,11 @@ public class UserController {
 	@RequestMapping(method = RequestMethod.PATCH )
 	@ResponseBody
 	public ResponseEntity<ResponseMessage> updateUser(@RequestBody UserDto userDto) {
+		User existingUser = userService.findByUsername(userDto.getUsername());
+		if (existingUser != null && !userDto.getPassword().equals(existingUser.getPassword())) {
+			userDto.setPassword(userService.encryptPassword(userDto.getPassword()));
+		}
+		
 		User updatedUser = userService.saveDto(userDto);
 		if (updatedUser != null) {
 			return ResponseEntity.status(HttpStatus.ACCEPTED).body(new ResponseMessage(updatedUser.getId(), User.class.getSimpleName(), "views.user.response.message.success.update"));
@@ -84,6 +79,9 @@ public class UserController {
 		if (existingUser != null) {
 			return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(new ResponseMessage("views.user.response.message.error.user.already.exists"));
 		}
+		
+		userDto.setPassword(userService.encryptPassword(userDto.getPassword()));
+		
 		User newUser = userService.saveDto(userDto);
 		if (newUser == null) {
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseMessage("views.user.response.message.error.create"));

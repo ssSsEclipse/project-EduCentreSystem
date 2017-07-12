@@ -1,34 +1,6 @@
-<!doctype html>
-<html ng-app="app">
-<head>
-<title>{{'views.header.user' | translate}}</title>
-<link rel="stylesheet" type="text/css" href="webjars/Semantic-UI/2.2.10/semantic.min.css" charset="UTF-8">
-<script src="webjars/jquery/3.1.1/jquery.min.js"></script>
-<script src="webjars/Semantic-UI/2.2.10/semantic.min.js"></script>
-
-<link rel="stylesheet" href="webjars/angular-ui-grid/4.0.6/ui-grid.min.css">
-<script src="webjars/angularjs/1.5.6/angular.min.js"></script>
-<script src="webjars/angular-ui-grid/4.0.6/ui-grid.min.js"></script>
-<script src="webjars/angular-translate/2.13.1/angular-translate.min.js"></script>
-<script src="webjars/angular-translate-loader-url/2.13.1/angular-translate-loader-url.min.js"></script>
-<script src="webjars/angular-translate-loader-static-files/2.13.1/angular-translate-loader-static-files.min.js"></script>
-
-<script src="resources/scripts/angular/app.js"></script>
-<script src="resources/scripts/angular/controllers/appCtrl.js"></script>
-<script src="resources/scripts/angular/controllers/components/users.js"></script>
-<style>
-.grid {
-	height: 400px;
-}
-</style>
-</head>
-<body ng-controller="AppCtrl">
-	<jsp:include page="component/header.jsp" />
-
-	<div class="ui main container" ng-controller="UsersCtrl">
+	<div class="ui main container"  ng-show="hasRole('ROLE_ADMIN')">
 		<h1 class="ui dividing header">{{'views.header.user' | translate}}</h1>
 
-		<%-- Form --%>
 		<div class="ui attached message" ng-show="editMode">
 			<p>{{'views.user.editing' | translate}} {{editingUser}}</p>
 		</div>
@@ -41,7 +13,7 @@
 					<label>{{'views.user.username' | translate}}</label> <input type="text" placeholder="{{'views.user.username' | translate}}" name="username">
 				</div>
 				<div class="field">
-					<label>{{'views.user.password' | translate}}</label> <input type="password" placeholder="{{'views.user.password.placeholder' | translate}}" name="password">
+					<label>{{'views.user.password' | translate}}</label> <input type="password" placeholder="{{'views.user.password' | translate}}" name="password">
 				</div>
 			</div>
 			<div class="three fields">
@@ -82,9 +54,7 @@
 
 		<h1 class="ui dividing header">{{'views.subheader.list' | translate}}</h1>
 		<div>
-			<div ui-grid="gridOptions" external-scopes="$scope" ui-grid-resize-columns ui-grid-pagination class="grid"></div>
+			<div ui-grid="gridOptions" ui-grid-resize-columns ui-grid-pagination class="grid"></div>
 		</div>
 	</div>
 
-</body>
-</html>

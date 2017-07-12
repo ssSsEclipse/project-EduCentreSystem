@@ -2,6 +2,7 @@ package com.hkta.educentresystem.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.PagingAndSortingRepository;
+import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Service;
 
 import com.hkta.educentresystem.dto.UserDto;
@@ -41,5 +42,10 @@ public class UserServiceImpl extends AbstractBaseCrudService<User, Long> impleme
 			newUser.setTutorialCentre(tutorialCentre);
 		}
 		return userRepository.save(newUser);
+	}
+
+	@Override
+	public String encryptPassword(String plaintext) {
+		return BCrypt.hashpw(plaintext, BCrypt.gensalt());
 	}
 }

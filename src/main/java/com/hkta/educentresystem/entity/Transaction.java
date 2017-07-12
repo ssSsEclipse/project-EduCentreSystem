@@ -6,12 +6,13 @@ import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
@@ -27,6 +28,10 @@ public class Transaction implements Serializable{
 	@Column(name = "id")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
+	
+	@JoinColumn(name = "tutorial_centre_id")
+	@ManyToOne(optional = true, fetch = FetchType.EAGER)
+	private Centre tutorialCentre;
 
 	@Column(name = "record_time")
     @JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd HH:mm:ss", timezone="GMT+8")
@@ -44,8 +49,23 @@ public class Transaction implements Serializable{
 	@Column(name = "commission")
 	private BigDecimal commission;
 
+	@Column(name = "cheque_issued_date")
+    @JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd", timezone="GMT+8")
+	private Date chequeIssuedDate;
+
+	@Column(name = "cheque_id")
+	private String customerId;
+	
 	public Long getId() {
 		return id;
+	}
+
+	public Centre getTutorialCentre() {
+		return tutorialCentre;
+	}
+
+	public void setTutorialCentre(Centre tutorialCentre) {
+		this.tutorialCentre = tutorialCentre;
 	}
 
 	public Date getRecordTime() {
@@ -87,4 +107,22 @@ public class Transaction implements Serializable{
 	public void setCommission(BigDecimal commission) {
 		this.commission = commission;
 	}
+
+	public Date getChequeIssuedDate() {
+		return chequeIssuedDate;
+	}
+
+	public void setChequeIssuedDate(Date chequeIssuedDate) {
+		this.chequeIssuedDate = chequeIssuedDate;
+	}
+
+	public String getCustomerId() {
+		return customerId;
+	}
+
+	public void setCustomerId(String customerId) {
+		this.customerId = customerId;
+	}
+	
+	
 }

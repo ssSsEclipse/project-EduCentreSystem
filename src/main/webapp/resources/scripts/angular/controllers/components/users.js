@@ -7,7 +7,6 @@ app.controller('UsersCtrl', ['$scope','UsersService','CommonFactory','$translate
 			pageSize: 10,
 			sort: null
 	};
-   
    $scope.gridOptions = {
 		   paginationPageSizes: [5, 10, 20],
 		   paginationPageSize: paginationOptions.pageSize,
@@ -30,8 +29,8 @@ app.controller('UsersCtrl', ['$scope','UsersService','CommonFactory','$translate
                 	, displayName:'column.header.modifiedDateTime', headerCellFilter:'translate'},
                 { name: 'actions', width: "7%", enableFiltering: false, cellTemplate: 
             		'<div class="grid-action-cell">'+
-            		'<a ng-click="grid.appScope.editSelectedRow(row.entity);" href="#"><i class="edit icon"></i></a>'+
-            		'<a ng-click="grid.appScope.deleteUser(row.entity.id);" href="#"><i class="red remove icon"></i></a>'+
+            		'<a ng-click="grid.appScope.editSelectedRow(row.entity);" href=""><i class="edit icon"></i></a>'+
+            		'<a ng-click="grid.appScope.deleteUserConfirm(row.entity.id);" href=""><i class="red remove icon"></i></a>'+
             		'</div>'
             		, displayName:'column.header.actions', headerCellFilter:'translate'
                 }
@@ -44,13 +43,6 @@ app.controller('UsersCtrl', ['$scope','UsersService','CommonFactory','$translate
           
         		   UsersService.getAllUsers(newPage,pageSize).success(function(data){
 
-	    	        	$.each(data.content,function(row){
-	    	       		  row.getTutorialCentreId = function(){
-	    	       		    return this.tutorialCentre == null ? '' : this.tutorialCentre.id;
-	    	       		  };
-	    	       		  row.getTutorialCentreName = function(){
-	    	       		    return this.tutorialCentre == null ? '' : this.tutorialCentre.schoolName;
-	    	       		  }});
         			   $scope.gridOptions.data = data.content;
         			   $scope.gridOptions.totalItems = data.totalElements;
         		   });
@@ -81,7 +73,27 @@ app.controller('UsersCtrl', ['$scope','UsersService','CommonFactory','$translate
 		select.dropdown("refresh");
     });
 	
-	$('.ui.form').form();
+	$('#userForm').form({
+	    fields: {
+	        username: {
+	          rules: [
+	            {
+	              type   : 'empty',
+	              prompt : $filterTranslate('views.user.form.validation.username.required')
+	            }
+	          ]
+	        },
+	        password: {
+	          rules: [
+	            {
+	              type   : 'empty',
+	              prompt : $filterTranslate('views.user.form.validation.password.required')
+	            }
+	          ]
+	        }
+	      }
+	    }
+	);
    
    $scope.editSelectedRow = function(user) {
 	   if ($scope.userForm != null) {
@@ -139,7 +151,13 @@ app.controller('UsersCtrl', ['$scope','UsersService','CommonFactory','$translate
     }
 	
 
-   $scope.deleteUser = function (id) {
+   $scope.deleteUserConfirm = function (id) {
+	   CommonFactory.confirmDelete($('#deleteConfirmModal'), 
+			   $scope.deleteUser , 
+		      [id]);
+    }
+   
+   $scope.deleteUser = function(id) {
 	   UsersService.deleteUser(id)
           .then (function success(response){
               CommonFactory.buildResponseMessage($scope.responseMessage, $filterTranslate(response.data.message), 'success');
@@ -149,19 +167,11 @@ app.controller('UsersCtrl', ['$scope','UsersService','CommonFactory','$translate
               CommonFactory.buildResponseMessage($scope.responseMessage, $filterTranslate(response.data.message), 'error');
               $scope.getAllUsers();
           })
-    }
+   }
 
    $scope.getAllUsers = function () {
 	   UsersService.getAllUsers(paginationOptions.pageNumber, paginationOptions.pageSize)
          .then(function success(response){
-        	 $.each(response.data.content,function(row){
-	       		  row.getTutorialCentreId = function(){
-	       		    return this.tutorialCentre == null ? '' : this.tutorialCentre.id;
-	       		  };
-	       		  row.getTutorialCentreName = function(){
-		       		    return this.tutorialCentre == null ? '' : this.tutorialCentre.schoolName;
-	       		  };
-       		  });
    		     $scope.gridOptions.data = response.data.content;
    	 	     $scope.gridOptions.totalItems = response.data.totalElements;
          },

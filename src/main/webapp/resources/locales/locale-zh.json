@@ -13,7 +13,6 @@
 	
 	"views.user.username": "用戶名稱",
 	"views.user.password": "密碼",
-	"views.user.password.placeholder": "已加密密碼  (bcrpyt)",
 	"views.user.role": "角色",
 	"views.user.role.admin": "管理員",
 	"views.user.role.user": "用戶",
@@ -40,6 +39,9 @@
 	"views.transaction.content": "內容",
 	"views.transaction.amount": "金額",
 	"views.transaction.commission": "佣金",
+	"views.transaction.grandTotal": "總結餘",
+	"views.transaction.chequeIssuedDate": "發出支票日期",
+	"views.transaction.chequeId": "支票編號",
 	"views.transaction.form.validation.year.required": "請輸入年份",
 	"views.transaction.form.validation.year.invalid": "請輸入正確年份",
 	"views.transaction.form.validation.month.required": "請輸入月份",
@@ -51,6 +53,7 @@
 	"views.centre.institutionPic": "機構負責人",
 	"views.centre.institutionPic.placeholder": "機構負責人名稱",
 	"views.centre.schoolName": "學校名稱",
+	"views.centre.logo": "圖像",
 	"views.centre.schoolAddress": "學校地址",
 	"views.centre.schoolPhone": "學校電話",
 	"views.centre.schoolFax": "傳真機號碼",
@@ -83,6 +86,10 @@
 	"button.search": "搜尋",
 	"button.generate": "產生",
 	"button.download": "下載",
+	
+	"modal.delete.confirm" : "確定刪除?",
+	"modal.delete.yes" : "是",
+	"modal.delete.no" : "否",
 	
 	"views.subheader.list": "名單"
 }

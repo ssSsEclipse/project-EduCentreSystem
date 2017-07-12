@@ -1,6 +1,6 @@
 var app = angular.module('app');
 
-app.controller('CentresCtrl', ['$scope','CentreService','CommonFactory','$translate','$filter', function ($scope,CentreService,CommonFactory,$translate,$filter) {
+app.controller('CentresCtrl', ['$scope','CentreService','CommonFactory','$translate','$filter','$rootScope', function ($scope,CentreService,CommonFactory,$translate,$filter,$rootScope) {
 	var $filterTranslate = $filter('translate');
 	var paginationOptions = {
 			pageNumber: 1,
@@ -30,14 +30,15 @@ app.controller('CentresCtrl', ['$scope','CentreService','CommonFactory','$transl
                 { name: 'accountNumber', minWidth: 150, displayName:'views.centre.accountNumber', headerCellFilter:'translate' },
                 { name: 'couponCode', minWidth: 300, displayName:'views.centre.couponCode', headerCellFilter:'translate' },
                 { name: 'discountComissionPdf', minWidth: 200, displayName:'views.centre.discountComissionPdf', headerCellFilter:'translate' },
+                { name: 'grandTotal', displayName:'views.transaction.grandTotal', headerCellFilter:'translate', width: 150, cellFilter: 'currency' },
                 { name: 'createDateTime', minWidth: 170, type: 'date', cellFilter: 'date:"yyyy-MM-dd HH:mm:ss"', enableFiltering: false
                 	, displayName:'column.header.createDateTime', headerCellFilter:'translate'},
                 { name: 'modifiedDateTime', minWidth: 170, type: 'date', cellFilter: 'date:"yyyy-MM-dd HH:mm:ss"', enableFiltering: false
                 	, displayName:'column.header.modifiedDateTime', headerCellFilter:'translate'},
                 { name: 'actions', minWidth: 70, enableFiltering: false, cellTemplate: 
             		'<div class="grid-action-cell">'+
-            		'<a ng-click="grid.appScope.editSelectedRow(row.entity);" href="#"><i class="edit icon"></i></a>'+
-            		'<a ng-click="grid.appScope.deleteCentre(row.entity.id);" href="#"><i class="red remove icon"></i></a>'+
+            		'<a ng-click="grid.appScope.editSelectedRow(row.entity);" href=""><i class="edit icon"></i></a>'+
+            		'<a ng-click="grid.appScope.deleteCentreConfirm(row.entity.id);" href=""><i class="red remove icon"></i></a>'+
             		'</div>'
             		, displayName:'column.header.actions', headerCellFilter:'translate'
                 }
@@ -59,10 +60,10 @@ app.controller('CentresCtrl', ['$scope','CentreService','CommonFactory','$transl
    $scope.editMode = false;
    $scope.centreForm = $('#centreForm');
    $scope.responseMessage = $('#responseMessage');
-   $scope.userId = $('#userId') ? $('#userId').val() : null;
    
-   if ($scope.userId) {
-	   CentreService.getCentreByUserId($scope.userId)
+   if (CommonFactory.hasRole($rootScope.user, 'ROLE_USER')) {
+	   $scope.userId = $rootScope.user.id;
+	   CentreService.getCentreByCurrentUser()
    		.then( function success(response) {
 			   $scope.editSelectedRow(response.data);
 		   },
@@ -72,7 +73,15 @@ app.controller('CentresCtrl', ['$scope','CentreService','CommonFactory','$transl
    }
 	$('.ui.form').form();
 	
+	$('input:file', '.ui.action.input')
+	  .on('change', function(e) {
+	    var name = e.target.files[0].name;
+	    $('input[name=fileName]', $(e.target).parent()).val(name);
+	});
 	
+	$scope.openFile = function() {
+		$('input[name=logo]').click();
+	}
    
    $scope.generateCouponCode = function() {
 	   var uuid = function generateUUID() {
@@ -157,6 +166,12 @@ app.controller('CentresCtrl', ['$scope','CentreService','CommonFactory','$transl
     }
 	
 
+   $scope.deleteCentreConfirm = function (id) {
+	   CommonFactory.confirmDelete($('#deleteConfirmModal'), 
+			   $scope.deleteCentre , 
+		      [id]);
+    }
+	   
    $scope.deleteCentre = function (id) {
 	   CentreService.deleteCentre(id)
           .then (function success(response){
@@ -191,18 +206,29 @@ app.service('CentreService',['$http','CommonFactory', function ($http,CommonFact
         });
 	}
     
-    this.getCentreByUserId = function getCentre(userId){
+    this.getCentreByCurrentUser = function getCentre(){
         return $http({
           method: 'GET',
-          url: 'centres/user/'+userId
+          url: 'centres/user'
         });
 	}
 	
     this.addCentre = function addCentre(centreForm){
+    	var formData = new FormData();
+    	formData.append('centre', 
+    		new Blob([CommonFactory.formDataToJSONString(centreForm)], 
+    		{ type: "application/json" }
+		));
+
+    	formData.append("file", $('input[name=logo]').prop('files')[0]);
+    	
         return $http({
           method: 'POST',
           url: 'centres',
-          data: CommonFactory.formDataToJSONString(centreForm)
+          headers: {
+        	   'Content-Type': undefined
+        	 },
+          data: formData
         });
     }
 	

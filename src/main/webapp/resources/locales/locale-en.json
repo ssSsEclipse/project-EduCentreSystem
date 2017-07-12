@@ -13,7 +13,6 @@
 
 	"views.user.username": "Username",
 	"views.user.password": "Password",
-	"views.user.password.placeholder": "Encrypted Password (bcrpyt)",
 	"views.user.role": "Role",
 	"views.user.role.admin": "Admin",
 	"views.user.role.user": "User",
@@ -40,6 +39,9 @@
 	"views.transaction.content": "Content",
 	"views.transaction.amount": "Amount",
 	"views.transaction.commission": "Commission",
+	"views.transaction.grandTotal": "Grand Total",
+	"views.transaction.chequeIssuedDate": "Cheque Issued Date",
+	"views.transaction.chequeId": "Cheque ID",
 	"views.transaction.form.validation.year.required": "Please enter year",
 	"views.transaction.form.validation.year.invalid": "Please enter a valid year",
 	"views.transaction.form.validation.month.required": "Please enter month",
@@ -51,6 +53,7 @@
 	"views.centre.institutionPic": "Institution PIC",
 	"views.centre.institutionPic.placeholder": "Institution Person In Charge",
 	"views.centre.schoolName": "School Name",
+	"views.centre.logo": "Logo",
 	"views.centre.schoolAddress": "School Address",
 	"views.centre.schoolPhone": "School Phone",
 	"views.centre.schoolFax": "Fax",
@@ -76,6 +79,10 @@
 	"button.search": "Search",
 	"button.generate": "Generate",
 	"button.download": "Download",
+	
+	"modal.delete.confirm" : "Are you sure to delete?",
+	"modal.delete.yes" : "Yes",
+	"modal.delete.no" : "No",
 	
 	"views.subheader.list": "List"
 }

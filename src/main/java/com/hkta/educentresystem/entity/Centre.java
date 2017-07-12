@@ -1,11 +1,18 @@
 package com.hkta.educentresystem.entity;
 
+import java.math.BigDecimal;
+import java.util.List;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
+
+import org.hibernate.annotations.Formula;
 
 @Entity
 @Table(name = "tutorial_centre")
@@ -59,9 +66,30 @@ public class Centre extends AuditData{
 
 	@Column(name = "discount_comission_pdf")
 	private String discountComissionPdf;
+	
+	@OneToMany(fetch = FetchType.EAGER, mappedBy = "tutorialCentre")
+	private List<Transaction> transactions;
+	
+	@Formula("(select sum(t.commission) from transaction_record t where t.tutorial_centre_id = id)")
+	private BigDecimal grandTotal;
+	
+	@Column(name = "logo")
+	private byte[] logo;
 
 	public Long getId() {
 		return id;
+	}
+	
+	public byte[] getLogo() {
+		return logo;
+	}
+
+	public void setLogo(byte[] logo) {
+		this.logo = logo;
+	}
+
+	public BigDecimal getGrandTotal() {
+		return grandTotal;
 	}
 
 	public String getInstitutionPic() {
