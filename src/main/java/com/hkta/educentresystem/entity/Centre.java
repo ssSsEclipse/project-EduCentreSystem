@@ -1,6 +1,7 @@
 package com.hkta.educentresystem.entity;
 
 import java.math.BigDecimal;
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.Column;
@@ -9,7 +10,10 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Lob;
 import javax.persistence.OneToMany;
+import javax.persistence.PrePersist;
+import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.Formula;
@@ -75,11 +79,30 @@ public class Centre extends AuditData{
 	
 	@Column(name = "logo")
 	private byte[] logo;
+	
+	@Column(name = "has_logo")
+	private Boolean hasLogo;
 
+	@PreUpdate
+    public void onPreUpdate() {
+		super.onPreUpdate();
+		this.hasLogo = logo.length > 0;
+    }
+	
+	@PrePersist
+	public void onPrePersist() {
+		super.onPrePersist();
+		this.hasLogo = logo.length > 0;
+	}
+	
 	public Long getId() {
 		return id;
 	}
 	
+	public Boolean isHasLogo() {
+		return hasLogo;
+	}
+
 	public byte[] getLogo() {
 		return logo;
 	}

@@ -27,6 +27,7 @@ account_number varchar(64),
 coupon_code varchar(36),
 discount_comission_pdf varchar(512),
 logo bytea,
+has_logo boolean,
 create_datetime timestamp,
 modified_datetime timestamp
 );

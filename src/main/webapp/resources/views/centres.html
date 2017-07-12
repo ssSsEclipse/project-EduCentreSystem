@@ -1,4 +1,9 @@
-
+<style>
+.centreLogo {
+	max-width: 100%;
+	max-height: 100%;
+}
+</style>
 <div class="ui main container">
 	<h1 class="ui dividing header">{{'views.header.centre' | translate}}</h1>
 
@@ -12,17 +17,25 @@
 		<h4 class="ui dividing header">
 			<i class="university icon"></i> {{'views.centre.section.centre.info' | translate}}
 		</h4>
-		<div class="fields">
-			<div class="eight wide field">
+		<div class="two fields">
+			<div class="field">
 				<label>{{'views.centre.schoolName' | translate}}</label> <input type="text" placeholder="{{'views.centre.schoolName' | translate}}" name="schoolName">
 			</div>
-			<div class="four wide field">
-				<label>{{'views.centre.logo' | translate}}</label>
-				<div class="ui action input">
-					<input type="text" placeholder="{{'views.centre.logo' | translate}}" readonly name="fileName" > <input type="file" name="logo" style="display: none;">
-					<div class="ui icon button" ng-click="openFile()">
-						<i class="attach icon"></i>
+			<div class="two fields">
+				<div class="field">
+					<label>{{'views.centre.logo' | translate}}</label>
+					<div class="ui action input">
+						<input type="text" placeholder="{{'views.centre.logo' | translate}}" readonly name="fileName"> 
+						<input style="display: none;" name="logoBytes" /> 
+						<input type="file" name="logo" style="display: none;">
+						<div class="ui icon button" ng-click="openFile()">
+							<i class="attach icon"></i>
+						</div>
 					</div>
+				</div>
+				<div class="field">
+					<label>{{'views.centre.logo.preview' | translate}}</label>
+					<img src="" class="ui tiny image" id="logoPreview"/>
 				</div>
 			</div>
 		</div>
@@ -75,7 +88,8 @@
 		</h4>
 		<div class="two fields">
 			<div class="field">
-				<label>{{'views.centre.couponCode' | translate}}</label> <input type="text" placeholder="{{'views.centre.couponCode' | translate}}" name="couponCode" id="couponCode">
+				<label>{{'views.centre.couponCode' | translate}}</label> 
+				<input type="text" placeholder="{{'views.centre.couponCode' | translate}}" name="couponCode" id="couponCode"  ng-disabled="userId">
 				<!-- <div class="ui action input" ng-class="userId ? 'disabled':''">
 						<input type="text" placeholder="{{'views.centre.couponCode' | translate}}" name="couponCode" readonly="" id="couponCode">
 						<button class="ui button" ng-show="hasRole('ROLE_ADMIN')" ng-click="generateCouponCode()"><i class="refresh icon"></i>{{'button.generate' | translate}}</button>
@@ -99,13 +113,13 @@
 				<i class="edit icon"></i>{{'button.update' | translate}}
 			</div>
 		</button>
-		<button class="ui reset button" ng-click="editMode = false" ng-hide="userId">
+		<button class="ui reset button" ng-click="resetForm()" ng-hide="userId">
 			<i class="erase icon"></i>{{'button.reset' | translate}}
 		</button>
 	</form>
 
 	<h1 class="ui dividing header" ng-show="hasRole('ROLE_ADMIN')">{{'views.subheader.list' | translate}}</h1>
-	<div  ng-show="hasRole('ROLE_ADMIN')">
+	<div ng-show="hasRole('ROLE_ADMIN')">
 		<div ui-grid="gridOptions" external-scopes="$scope" ui-grid-pagination class="grid"></div>
 	</div>
 </div>

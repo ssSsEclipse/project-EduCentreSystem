@@ -6,6 +6,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+import org.apache.commons.io.output.ByteArrayOutputStream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -103,9 +104,15 @@ public class CentreController {
 		return ResponseEntity.status(HttpStatus.OK).body(user.getTutorialCentre());
 	}
 
-	@RequestMapping(method = RequestMethod.PATCH )
+	@RequestMapping(value="/update", method = RequestMethod.POST, consumes = {"multipart/form-data"} )
 	@ResponseBody
-	public ResponseEntity<ResponseMessage> updateCentre(@RequestBody Centre centre) {
+	public ResponseEntity<ResponseMessage> updateCentre(@RequestPart(name="file", required=false) MultipartFile file, @RequestPart("centre") Centre centre) throws IOException {
+		if (file != null) {
+			centre.setLogo(file.getBytes());
+		}else {
+			Centre originalCentre = centreService.findOne(centre.getId());
+			centre.setLogo(originalCentre.getLogo());
+		}
 		if (!centreService.isRequestAllowed(centre.getId())) {
 			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ResponseMessage("views.centre.response.message.error.update.notallowed"));
 		}
@@ -129,7 +136,9 @@ public class CentreController {
 	@RequestMapping(method = RequestMethod.POST, consumes = {"multipart/form-data"})
 	@ResponseBody
 	public ResponseEntity<ResponseMessage> addCentre(@RequestPart("file") MultipartFile file, @RequestPart("centre") Centre centre) throws IOException {
-		centre.setLogo(file.getBytes());
+		if (file != null) {
+			centre.setLogo(file.getBytes());
+		}
 		Centre newCentre = centreService.save(centre);
 		if (newCentre == null) {
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseMessage("views.centre.response.message.error.create"));

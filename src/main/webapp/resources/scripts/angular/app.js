@@ -17,7 +17,6 @@ app.factory('CommonFactory', function() {
 			    })
 			    .modal('show')
 			  ;
-			  
 		},
 		hasRole : function(user, role) {
 			  var result = false;
@@ -32,6 +31,7 @@ app.factory('CommonFactory', function() {
 		},
 		resetForm : function(form) {
 			$(form).form('reset');
+			$('#logoPreview').attr('src', '');
 		},
 		buildResponseMessage: function(messageDiv, message, type) {
 			if ($(messageDiv).transition('is visible')){
@@ -43,7 +43,7 @@ app.factory('CommonFactory', function() {
 		resetResponseMessage: function(messageDiv) {
 			$(messageDiv).html('').removeClass('error success').transition('hide');
 		},
-		putDataToForm : function(user, form) {
+		putDataToForm : function(data, form) {
 			if (form.length > 0) {
 				form = form[0];
 			}
@@ -53,35 +53,35 @@ app.factory('CommonFactory', function() {
 				var name = element.name;
 				var type = element.type;
 				
-				if (user.hasOwnProperty(name)) {
+				if (data.hasOwnProperty(name)) {
 					if (type == 'checkbox') {
 						var parent = $($($(element)).parent());
 						if (parent.hasClass('ui') && parent.hasClass('checkbox')) {
-							parent.checkbox(user[name] ? 'check' : 'uncheck');
+							parent.checkbox(data[name] ? 'check' : 'uncheck');
 						}else {
-							element.checked = user[name];
+							element.checked = data[name];
 						}
 					}else if (type == 'select-one') {
-						if (null === user[name]) {
+						if (null === data[name]) {
 							$(element)
 							  .dropdown('restore defaults');
 						}else {
 							$(element)
-							  .dropdown('set selected', user[name]);
+							  .dropdown('set selected', data[name]);
 						}
 					} else if (type == 'file') {
-						console.log(user[name]);
+						$('input[name=logoBytes]').val(data[name]);
 					} else {
-						element.value = user[name];
+						element.value = data[name];
 					}
 				}else if (name === 'tutorialCentreId') { //special handling for tutorialCentre
 					if (type == 'select-one') {
-						if (null === user['tutorialCentre']) {
+						if (null === data['tutorialCentre']) {
 							$(element)
 							  .dropdown('restore defaults');
 						}else {
 							$(element)
-							  .dropdown('set selected', user['tutorialCentre']['id']);
+							  .dropdown('set selected', data['tutorialCentre']['id']);
 						}
 					}
 				}

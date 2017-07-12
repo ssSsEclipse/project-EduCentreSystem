@@ -29,9 +29,9 @@ app.controller('TransactionsCtrl', ['$scope','TransactionsService','$translate',
       { name: 'recordTime', displayName:'views.transaction.recordTime', headerCellFilter:'translate'
     	  , width: "14%", type: 'date', cellFilter: 'date:"yyyy-MM-dd HH:mm:ss"' },
       { name: 'customerName', displayName:'views.transaction.customerName', headerCellFilter:'translate', width: "12%" },
-      { name: 'content', displayName:'views.transaction.content', headerCellFilter:'translate', width: "27%" },,
+      { name: 'content', displayName:'views.transaction.content', headerCellFilter:'translate', width: "22%" },,
       { name: 'chequeIssuedDate', displayName:'views.transaction.chequeIssuedDate', headerCellFilter:'translate', width: "10%", type: 'date', cellFilter: 'date:"yyyy-MM-dd"' },
-      { name: 'chequeId', displayName:'views.transaction.chequeId', headerCellFilter:'translate', width: "10%" },
+      { name: 'chequeId', displayName:'views.transaction.chequeId', headerCellFilter:'translate', width: "15%" },
       { name: 'amount', displayName:'views.transaction.amount', headerCellFilter:'translate', width: "10%", cellFilter: 'currency' },
       { name: 'commission', displayName:'views.transaction.commission', headerCellFilter:'translate', width: "10%", cellFilter: 'currency' }
     ],

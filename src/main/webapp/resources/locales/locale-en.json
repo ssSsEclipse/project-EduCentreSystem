@@ -54,6 +54,7 @@
 	"views.centre.institutionPic.placeholder": "Institution Person In Charge",
 	"views.centre.schoolName": "School Name",
 	"views.centre.logo": "Logo",
+	"views.centre.logo.preview": "Current Logo",
 	"views.centre.schoolAddress": "School Address",
 	"views.centre.schoolPhone": "School Phone",
 	"views.centre.schoolFax": "Fax",

@@ -1,6 +1,7 @@
 var app = angular.module('app');
 
-app.controller('CentresCtrl', ['$scope','CentreService','CommonFactory','$translate','$filter','$rootScope', function ($scope,CentreService,CommonFactory,$translate,$filter,$rootScope) {
+app.controller('CentresCtrl', ['$scope','CentreService','CommonFactory','$translate','$filter','$rootScope','$window', 
+                               function ($scope,CentreService,CommonFactory,$translate,$filter,$rootScope,$window) {
 	var $filterTranslate = $filter('translate');
 	var paginationOptions = {
 			pageNumber: 1,
@@ -17,6 +18,12 @@ app.controller('CentresCtrl', ['$scope','CentreService','CommonFactory','$transl
 		   useExternalPagination: true,
 		   columnDefs: [
                 { name: 'id', field: 'id', visible: false},
+                { name: 'logo', minWidth: 70, enableFiltering: false, 
+                	cellTemplate: "<div class='grid-action-cell'>" +
+                			"<img class='centreLogo' ng-attr-src='{{grid.appScope.getImageSrc(row.entity.logo)}}' />" +
+                			"</div>"
+	            		, displayName:'views.centre.logo', headerCellFilter:'translate'
+                },
                 { name: 'schoolName', minWidth: 200, displayName:'views.centre.schoolName', headerCellFilter:'translate'},
                 { name: 'schoolAddress', minWidth: 200, displayName:'views.centre.schoolAddress', headerCellFilter:'translate'},
                 { name: 'schoolPhone', minWidth: 150, displayName:'views.centre.schoolPhone', headerCellFilter:'translate' },
@@ -56,6 +63,13 @@ app.controller('CentresCtrl', ['$scope','CentreService','CommonFactory','$transl
         	   });
            }
    	};
+   
+   $scope.getImageSrc = function(bytes) {
+	   if (bytes) {
+		   return "data:image/png;base64," + bytes;
+	   }
+	   return "";
+   }
 
    $scope.editMode = false;
    $scope.centreForm = $('#centreForm');
@@ -115,6 +129,9 @@ app.controller('CentresCtrl', ['$scope','CentreService','CommonFactory','$transl
 		   $scope.editingCentre = centre.schoolName;
 		   CommonFactory.resetResponseMessage($scope.responseMessage)
 		   CommonFactory.putDataToForm(centre, $scope.centreForm);
+		   if ($('input[name=logoBytes]').val()) {
+			   $('#logoPreview').attr("src","data:image/png;base64," + $('input[name=logoBytes]').val());
+		   }
 	   }
    }
    
@@ -185,14 +202,16 @@ app.controller('CentresCtrl', ['$scope','CentreService','CommonFactory','$transl
     }
 
    $scope.getAllCentres = function () {
-	   CentreService.getAllCentres(paginationOptions.pageNumber, paginationOptions.pageSize)
-         .then(function success(response){
-   		     $scope.gridOptions.data = response.data.content;
-   	 	     $scope.gridOptions.totalItems = response.data.totalElements;
-         },
-         function error (response ){
-             console.log(response)
-         });
+	   if (CommonFactory.hasRole($rootScope.user, 'ROLE_ADMIN')) {
+		   CentreService.getAllCentres(paginationOptions.pageNumber, paginationOptions.pageSize)
+	         .then(function success(response){
+	   		     $scope.gridOptions.data = response.data.content;
+	   	 	     $scope.gridOptions.totalItems = response.data.totalElements;
+	         },
+	         function error (response ){
+	             console.log(response)
+	         });
+	   }
    }
    
    $scope.getAllCentres();
@@ -220,7 +239,8 @@ app.service('CentreService',['$http','CommonFactory', function ($http,CommonFact
     		{ type: "application/json" }
 		));
 
-    	formData.append("file", $('input[name=logo]').prop('files')[0]);
+    	var file = $('input[name=logo]').prop('files').length > 0 ? $('input[name=logo]').prop('files')[0] : null;
+    	formData.append("file", file);
     	
         return $http({
           method: 'POST',
@@ -240,10 +260,22 @@ app.service('CentreService',['$http','CommonFactory', function ($http,CommonFact
     }
 	
     this.updateCentre = function updateCentre(centreForm){
+    	var formData = new FormData();
+    	formData.append('centre', 
+    		new Blob([CommonFactory.formDataToJSONString(centreForm)], 
+    		{ type: "application/json" }
+		));
+
+    	var file = $('input[name=logo]').prop('files').length > 0 ? $('input[name=logo]').prop('files')[0] : null;
+    	formData.append("file", file);
+    	
         return $http({
-          method: 'PATCH',
-          url: 'centres/',
-          data: CommonFactory.formDataToJSONString(centreForm)
+          method: 'POST',
+          url: 'centres/update',
+          headers: {
+        	   'Content-Type': undefined
+        	 },
+          data: formData
         })
     }
 	

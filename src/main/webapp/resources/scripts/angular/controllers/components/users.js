@@ -20,8 +20,9 @@ app.controller('UsersCtrl', ['$scope','UsersService','CommonFactory','$translate
                 { name: 'active', width: "7%", displayName:'views.user.active', headerCellFilter:'translate' },
                 { name: 'role', width: "10%", displayName:'views.user.role', headerCellFilter:'translate' },
                 { name: 'tutorialCentreId', width: "13%", displayName:'views.user.tutorialCentre', 
-                	headerCellFilter:'translate', cellTemplate:'<div class="ui-grid-cell-contents" ng-if="row.entity.tutorialCentre">{{row.entity.tutorialCentre.schoolName}}</div>' +
-                    									'<div class="ui-grid-cell-contents" ng-if="!row.entity.tutorialCentre"></div>'
+                	headerCellFilter:'translate', 
+                	cellTemplate:'<div class="ui-grid-cell-contents" ng-if="row.entity.tutorialCentre">{{row.entity.tutorialCentre.schoolName}}</div>' +
+                    			'<div class="ui-grid-cell-contents" ng-if="!row.entity.tutorialCentre"></div>'
                 	},
                 { name: 'createDateTime', width: "15%", type: 'date', cellFilter: 'date:"yyyy-MM-dd HH:mm:ss"', enableFiltering: false
                 	, displayName:'column.header.createDateTime', headerCellFilter:'translate'},

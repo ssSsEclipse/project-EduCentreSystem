@@ -54,7 +54,7 @@ public class Transaction implements Serializable{
 	private Date chequeIssuedDate;
 
 	@Column(name = "cheque_id")
-	private String customerId;
+	private String chequeId;
 	
 	public Long getId() {
 		return id;
@@ -116,13 +116,13 @@ public class Transaction implements Serializable{
 		this.chequeIssuedDate = chequeIssuedDate;
 	}
 
-	public String getCustomerId() {
-		return customerId;
+	public String getChequeId() {
+		return chequeId;
 	}
 
-	public void setCustomerId(String customerId) {
-		this.customerId = customerId;
+	public void setChequeId(String chequeId) {
+		this.chequeId = chequeId;
 	}
-	
+
 	
 }

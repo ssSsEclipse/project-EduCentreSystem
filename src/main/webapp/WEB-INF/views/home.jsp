@@ -2,7 +2,7 @@
 <%@ page session="true"%>
 <html ng-app="app">
 <head>
-<title>{{"views.home.appname" | translate}}</title>
+<title>Portal</title>
 <link rel="stylesheet" type="text/css" href="webjars/Semantic-UI/2.2.10/semantic.min.css" charset="UTF-8">
 <link rel="stylesheet" type="text/css" href="webjars/angular-ui-grid/4.0.6/ui-grid.min.css">
 <link rel="stylesheet" type="text/css" href="resources/styles/header.css">
@@ -17,7 +17,7 @@
 }
 
 .grid {
-	max-height: 500px;
+	max-height: 410px;
 }
 </style>
 </head>
@@ -42,15 +42,15 @@
 	<div ng-view></div>
 
 
-	<div class="ui basic modal" id="deleteConfirmModal">
+	<div class="ui mini modal" id="deleteConfirmModal">
 		<div class="ui icon header">
 			<i class="remove circle icon"></i> {{ 'modal.delete.confirm' | translate }}
 		</div>
 		<div class="actions">
-			<div class="ui red basic cancel inverted button">
+			<div class="ui negative button">
 				<i class="remove icon"></i> {{ 'modal.delete.no' | translate }}
 			</div>
-			<div class="ui green ok inverted button">
+			<div class="ui positive button">
 				<i class="checkmark icon"></i> {{ 'modal.delete.yes' | translate }}
 			</div>
 		</div>
