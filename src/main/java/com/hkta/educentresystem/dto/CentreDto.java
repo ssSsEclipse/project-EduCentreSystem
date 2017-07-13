@@ -1,99 +1,54 @@
-package com.hkta.educentresystem.entity;
+package com.hkta.educentresystem.dto;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
-import java.util.Date;
-import java.util.List;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Lob;
-import javax.persistence.OneToMany;
-import javax.persistence.PrePersist;
-import javax.persistence.PreUpdate;
-import javax.persistence.Table;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import org.hibernate.annotations.Formula;
+public class CentreDto implements Serializable{
 
-@Entity
-@Table(name = "tutorial_centre")
-public class Centre extends AuditData{
 
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 5422955536240948353L;
+	private static final long serialVersionUID = -3411381203336244460L;
 
-	@Id
-	@Column(name = "id")
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	@Column(name = "institution_pic")
 	private String institutionPic;
 
-	@Column(name = "school_name")
 	private String schoolName;
 
-	@Column(name = "school_address")
 	private String schoolAddress;
 	
-	@Column(name = "pic_mobile")
 	private String picMobile;
 
-	@Column(name = "school_phone")
 	private String schoolPhone;
 	
-	@Column(name = "school_fax")
 	private String schoolFax;
 
-	@Column(name = "email")
 	private String email;
 
-	@Column(name = "website")
 	private String website;
 
-	@Column(name = "bank_name")
 	private String bankName;
 
-	@Column(name = "account_name")
 	private String accountName;
 
-	@Column(name = "account_number")
 	private String accountNumber;
 
-	@Column(name = "coupon_code")
 	private String couponCode;
-
-	@Column(name = "discount_comission_pdf")
+	
 	private String discountComissionPdf;
-	
-	@OneToMany(fetch = FetchType.EAGER, mappedBy = "tutorialCentre")
-	private List<Transaction> transactions;
-	
-	@Formula("(select sum(t.commission) from transaction_record t where t.tutorial_centre_id = id)")
+		
 	private BigDecimal grandTotal;
 	
-	@Column(name = "logo")
+	@JsonIgnore
 	private byte[] logo;
-	
-	@Column(name = "has_logo")
+
+	@JsonIgnore
 	private Boolean hasLogo;
 
-	@PreUpdate
-    public void onPreUpdate() {
-		super.onPreUpdate();
-		this.hasLogo = this.logo != null ? logo.length > 0 : false;
-    }
-	
-	@PrePersist
-	public void onPrePersist() {
-		super.onPrePersist();
-		this.hasLogo = this.logo != null ? logo.length > 0 : false;
-	}
 	
 	public Long getId() {
 		return id;
@@ -101,14 +56,6 @@ public class Centre extends AuditData{
 	
 	public Boolean isHasLogo() {
 		return hasLogo;
-	}
-
-	public byte[] getLogo() {
-		return logo;
-	}
-
-	public void setLogo(byte[] logo) {
-		this.logo = logo;
 	}
 
 	public BigDecimal getGrandTotal() {
@@ -217,6 +164,30 @@ public class Centre extends AuditData{
 
 	public void setDiscountComissionPdf(String discountComissionPdf) {
 		this.discountComissionPdf = discountComissionPdf;
+	}
+
+	public byte[] getLogo() {
+		return logo;
+	}
+
+	public void setLogo(byte[] logo) {
+		this.logo = logo;
+	}
+
+	public Boolean getHasLogo() {
+		return hasLogo;
+	}
+
+	public void setHasLogo(Boolean hasLogo) {
+		this.hasLogo = hasLogo;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public void setGrandTotal(BigDecimal grandTotal) {
+		this.grandTotal = grandTotal;
 	}
 	
 	

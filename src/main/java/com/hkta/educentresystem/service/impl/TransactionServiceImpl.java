@@ -23,11 +23,12 @@ public class TransactionServiceImpl extends AbstractBaseCrudService<Transaction,
 	
 	@Override
 	@Transactional(readOnly = true)
-	public Page<Transaction> findByMonthYear(String month, String year, int page, int size) {
+	public Page<Transaction> findByCentreWithMonthYear(Long tutorialCentreId, String month, String year, int page, int size) {
 		month = !StringUtils.isNumeric(month) ? "" : month;
 		year = !StringUtils.isNumeric(year) ? "" : year;
 		
-		Page<Transaction> result = transactionRepository.findByMonthYear(
+		Page<Transaction> result = transactionRepository.findByCentreWithMonthYear(
+				tutorialCentreId,
 				StringUtils.isEmpty(month) ? null : Integer.parseInt(month),
 				StringUtils.isEmpty(year) ? null : Integer.parseInt(year),
 				new PageRequest(page, size));

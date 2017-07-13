@@ -8,8 +8,10 @@ import org.springframework.stereotype.Service;
 
 import com.hkta.educentresystem.dto.CustomUserDetails;
 import com.hkta.educentresystem.entity.Centre;
+import com.hkta.educentresystem.entity.User;
 import com.hkta.educentresystem.repository.CentreRepository;
 import com.hkta.educentresystem.service.CentreService;
+import com.hkta.educentresystem.service.TransactionService;
 import com.hkta.educentresystem.service.UserService;
 
 @Service
@@ -19,6 +21,8 @@ public class CentreServiceImpl extends AbstractBaseCrudService<Centre, Long> imp
 	private CentreRepository centreRepository;
 	@Autowired
 	private UserService userService;
+	@Autowired
+	private TransactionService transactionService;
 
 	@Override
 	public PagingAndSortingRepository<Centre, Long> getRepository() {
@@ -45,5 +49,19 @@ public class CentreServiceImpl extends AbstractBaseCrudService<Centre, Long> imp
 			}
 		}
 		return false;
+	}
+
+	@Override
+	public Centre getCurrentUserCentre() {
+		CustomUserDetails userDetails = (CustomUserDetails)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		User user = userService.findOne(userDetails.getId());
+		return user.getTutorialCentre();
+	}
+
+	@Override
+	public boolean canDeleteCentre(Centre centre) {
+		boolean result = false;
+		result = userService.findByCentre(centre.getId()).isEmpty() && transactionService.findByCentreWithMonthYear(centre.getId(), null, null, 0, Integer.MAX_VALUE).getTotalElements() == 0;
+		return result;
 	}
 }

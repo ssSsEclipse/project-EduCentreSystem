@@ -95,13 +95,7 @@ public class CentreController {
 	@RequestMapping(value = "/user", method = RequestMethod.GET)
 	@ResponseBody
 	public ResponseEntity<?> getCentreByUserId() {
-		CustomUserDetails userDetails = (CustomUserDetails)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		User user = userService.findOne(userDetails.getId());
-		
-		if (!centreService.isRequestAllowed(user.getTutorialCentre() == null ? null : user.getTutorialCentre().getId())) {
-			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ResponseMessage("views.centre.response.message.error.get.notallowed"));
-		}
-		return ResponseEntity.status(HttpStatus.OK).body(user.getTutorialCentre());
+		return ResponseEntity.status(HttpStatus.OK).body(centreService.getCurrentUserCentre());
 	}
 
 	@RequestMapping(value="/update", method = RequestMethod.POST, consumes = {"multipart/form-data"} )
@@ -123,19 +117,22 @@ public class CentreController {
 	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	@RequestMapping(value="/{id}", method = RequestMethod.DELETE )
 	@ResponseBody
-	public ResponseEntity<ResponseMessage> deletePerson(@PathVariable("id") Long id) {
-		Centre Centre = centreService.findOne(id);
-		if (Centre != null) {
-			centreService.delete(Centre);
+	public ResponseEntity<ResponseMessage> deleteCentre(@PathVariable("id") Long id) {
+		Centre centre = centreService.findOne(id);
+		if (centre != null) {
+			if (!centreService.canDeleteCentre(centre)) {
+				return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseMessage("views.centre.response.message.error.delete.relations.exist"));
+			}
+			centreService.delete(centre);
 			return ResponseEntity.status(HttpStatus.ACCEPTED).body(new ResponseMessage(id, Centre.class.getSimpleName(), "views.centre.response.message.success.delete"));
 		}
-		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseMessage("views.centre.response.message.delete.create"));
+		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseMessage("views.centre.response.message.error.delete"));
 	} 
 
 	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	@RequestMapping(method = RequestMethod.POST, consumes = {"multipart/form-data"})
 	@ResponseBody
-	public ResponseEntity<ResponseMessage> addCentre(@RequestPart("file") MultipartFile file, @RequestPart("centre") Centre centre) throws IOException {
+	public ResponseEntity<ResponseMessage> addCentre(@RequestPart(name="file", required=false) MultipartFile file, @RequestPart("centre") Centre centre) throws IOException {
 		if (file != null) {
 			centre.setLogo(file.getBytes());
 		}

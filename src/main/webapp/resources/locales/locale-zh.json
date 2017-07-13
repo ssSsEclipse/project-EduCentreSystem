@@ -76,6 +76,7 @@
 	"views.centre.response.message.error.create" : "無法新增補習社",
 	"views.centre.response.message.error.get.notallowed" : "沒有權限取得其他補習社資料",
 	"views.centre.response.message.error.update.notallowed" : "沒有權限更改其他補習社資料",
+	"views.centre.response.message.error.delete.relations.exist": "無法刪除補習社, 有關用戶/交易記錄仍然存在",
 	
 	"column.header.createDateTime": "建立時間",
 	"column.header.modifiedDateTime": "更改時間",
