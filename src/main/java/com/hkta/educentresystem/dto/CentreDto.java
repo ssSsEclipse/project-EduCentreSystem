@@ -38,6 +38,8 @@ public class CentreDto{
 	private String discountComissionPdfFileName;
 	
 	private byte[] logo;
+
+	private BigDecimal grandTotal;
 		
 	public Long getId() {
 		return id;
@@ -166,5 +168,12 @@ public class CentreDto{
 	public void setDiscountComissionPdfUrl(String discountComissionPdfUrl) {
 		this.discountComissionPdfUrl = discountComissionPdfUrl;
 	}
+
+	public BigDecimal getGrandTotal() {
+		return grandTotal;
+	}
 	
+	public void setGrandTotal(BigDecimal grandTotal) {
+		this.grandTotal = grandTotal;
+	}
 }

@@ -6,4 +6,6 @@ public interface CentreService extends BaseCrudService<Centre, Long>{
 	
 	Centre findByCouponCode(String couponCode);
 	boolean isRequestAllowed(Long requestingCentreId);
+	Centre getCurrentUserCentre();
+	boolean canDeleteCentre(Centre centre);
 }

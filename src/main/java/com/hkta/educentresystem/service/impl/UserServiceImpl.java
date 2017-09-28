@@ -1,5 +1,7 @@
 package com.hkta.educentresystem.service.impl;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.security.crypto.bcrypt.BCrypt;
@@ -47,5 +49,10 @@ public class UserServiceImpl extends AbstractBaseCrudService<User, Long> impleme
 	@Override
 	public String encryptPassword(String plaintext) {
 		return BCrypt.hashpw(plaintext, BCrypt.gensalt());
+	}
+
+	@Override
+	public List<User> findByCentre(Long tutorialCentreId) {
+		return userRepository.findByCentre(tutorialCentreId);
 	}
 }

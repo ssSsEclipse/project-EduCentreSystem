@@ -89,13 +89,13 @@ public class Centre extends AuditData{
 	@PreUpdate
     public void onPreUpdate() {
 		super.onPreUpdate();
-		this.hasLogo = logo != null && logo.length > 0;
+		this.hasLogo = this.logo != null ? logo.length > 0 : false;
     }
 	
 	@PrePersist
 	public void onPrePersist() {
 		super.onPrePersist();
-		this.hasLogo = logo != null && logo.length > 0;
+		this.hasLogo = this.logo != null ? logo.length > 0 : false;
 	}
 	
 	public Long getId() {
