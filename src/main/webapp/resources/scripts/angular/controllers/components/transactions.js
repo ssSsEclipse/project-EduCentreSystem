@@ -1,25 +1,57 @@
 var app = angular.module('app');
 
-app.controller('TransactionsCtrl', ['$scope','TransactionsService','$translate','$filter', function ($scope,TransactionsService,$translate,$filter) {
+app.controller('TransactionsCtrl', ['$scope','TransactionsService','$translate','$filter', 'CommonFactory', '$rootScope', 'CentreService', 'UsersService', 
+                                    function ($scope,TransactionsService,$translate,$filter,CommonFactory,$rootScope,CentreService,UsersService) {
 	var $filterTranslate = $filter('translate');
 	var paginationOptions = {
      pageNumber: 1,
-	 pageSize: 10,
+	 pageSize: 100,
 	 sort: null
    };
+	$scope.centreId = '';
 	
 	$('.ui.dropdown').dropdown();
+	
+	$('#tutorialCentreId').on('change', function() {
+		$scope.centreId = $('#tutorialCentreId').val();
+	});
 
    $scope.getTransactions = function(){
-	   TransactionsService.getTransactions(paginationOptions.pageNumber, paginationOptions.pageSize).success(function(data){
+	   TransactionsService.getTransactions($scope.centreId, paginationOptions.pageNumber, paginationOptions.pageSize).success(function(data){
 		  $scope.gridOptions.data = data.result.content;
 	 	  $scope.gridOptions.totalItems = data.result.totalElements;
 	 	  $scope.grandTotal = data.grandTotal;
 	   });    
 	}
+	
+   if (CommonFactory.hasRole($rootScope.user, 'ROLE_USER')) {
+	   $scope.userId = $rootScope.user.id;
+	   CentreService.getCentreByCurrentUser()
+   		.then( function success(response) {
+			   $scope.centreId = response.data.id;
+			   $scope.getTransactions();
+		   },
+		   function error(response) {
+			   CommonFactory.buildResponseMessage($scope.responseMessage, $filterTranslate(response.data.message), 'error');
+		   });
+   }else if (CommonFactory.hasRole($rootScope.user, 'ROLE_ADMIN')) {
+		UsersService.getCentreList().then(function success(response){
+			var select = $('#tutorialCentreId');
+			if (response.data.success && response.data.results) {
+				$(response.data.results).each(function(index, item) {
+					select.append($("<option></option>")
+		                    .attr("value",item.value)
+		                    .text(item.name)); 
+				});
+			}
+			
+			select.dropdown("refresh");
+	    });
+		$scope.getTransactions();
+   }
    
    $scope.gridOptions = {
-    paginationPageSizes: [5, 10, 20],
+    paginationPageSizes: [50, 100, 200],
     paginationPageSize: paginationOptions.pageSize,
     enableColumnMenus:false,
 	enableFiltering: true,
@@ -41,27 +73,21 @@ app.controller('TransactionsCtrl', ['$scope','TransactionsService','$translate',
           paginationOptions.pageNumber = newPage;
           paginationOptions.pageSize = pageSize;
           
-          TransactionsService.getTransactions(newPage,pageSize).success(function(data){
-        	  $scope.gridOptions.data = data.result.content;
-         	  $scope.gridOptions.totalItems = data.result.totalElements;
-    	 	  $scope.grandTotal = data.grandTotal;
-          });
         });
      }
   };
    
-   $scope.getTransactions();
   
 }]);
 
 
 app.service('TransactionsService',['$http', function ($http) {
 	
-	function getTransactions(pageNumber, size) {
+	function getTransactions(centreId, pageNumber, size) {
 		pageNumber = pageNumber > 0?pageNumber - 1:0;
         return  $http({
           method: 'GET',
-          url: 'transactions/list?page='+pageNumber+'&size='+size+'&month='+$('input[name=month').val()+'&year='+$('input[name=year').val()
+          url: 'transactions/list?centreId='+centreId+'&page='+pageNumber+'&size='+size+'&month='+$('input[name=month').val()+'&year='+$('input[name=year').val()
         });
     }
 	

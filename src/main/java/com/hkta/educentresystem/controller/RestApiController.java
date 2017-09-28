@@ -1,5 +1,7 @@
 package com.hkta.educentresystem.controller;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,9 +16,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.hkta.educentresystem.dto.CentreDto;
 import com.hkta.educentresystem.dto.ResponseMessage;
 import com.hkta.educentresystem.entity.Centre;
 import com.hkta.educentresystem.entity.Transaction;
+import com.hkta.educentresystem.mapper.CustomDozerMapper;
 import com.hkta.educentresystem.service.CentreService;
 import com.hkta.educentresystem.service.TransactionService;
 
@@ -30,15 +34,22 @@ public class RestApiController {
 	private CentreService centreService;
 	@Autowired
 	private TransactionService transactionService;
+	@Autowired
+	private CustomDozerMapper dozerMapper;
 
 	@RequestMapping(value = "/centre", method = RequestMethod.GET)
-	public Centre getCentre(@RequestParam(value="id", required=false) Long id, @RequestParam(value="couponCode", required=false) String couponCode) {
+	public CentreDto getCentre(@RequestParam(value="id", required=false) Long id, @RequestParam(value="couponCode", required=false) String couponCode, HttpServletRequest request) {
+		Centre result = null;
 		if (id != null) {
-			return centreService.findOne(id);
+			result = centreService.findOne(id);
 		}else if (!StringUtils.isEmpty(couponCode)) {
-			return centreService.findByCouponCode(couponCode);
+			result = centreService.findByCouponCode(couponCode);
 		}
-		return null;
+		CentreDto resultDto = dozerMapper.map(result, CentreDto.class);
+		if (result.getDiscountComissionPdf() != null) {
+			resultDto.setDiscountComissionPdfUrl(request.getRequestURL().toString().replace("api/centre", "centres").concat("/document/").concat(result.getId().toString()));
+		}
+		return resultDto;
 	}
 
 	@RequestMapping(value="/transaction/{id}", method = RequestMethod.DELETE )

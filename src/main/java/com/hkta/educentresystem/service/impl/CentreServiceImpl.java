@@ -27,7 +27,7 @@ public class CentreServiceImpl extends AbstractBaseCrudService<Centre, Long> imp
 
 	@Override
 	public Centre findByCouponCode(String couponCode) {
-		return centreRepository.findByCouponCode(couponCode);
+		return centreRepository.findByCouponCodeIgnoreCase(couponCode);
 	}
 
 	@Override

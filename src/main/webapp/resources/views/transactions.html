@@ -1,10 +1,18 @@
 
-<div class="ui main container" ng-show="hasRole('ROLE_USER')">
+<div class="ui main container">
 	<h1 class="ui dividing header">{{'views.header.transaction' | translate}}</h1>
 
 	<form class="ui form segment" id="searchTransactionForm">
 		<div class="fields">
 			<div class="eight wide field">
+				<div ng-show="hasRole('ROLE_ADMIN')">
+					<h4 class="ui dividing header">{{'views.transaction.tutorialCentre' | translate}}</h4>
+					<div class="field">
+						<select class="ui search selection dropdown" name="tutorialCentreId" id="tutorialCentreId">
+							<option value=""></option>
+						</select>
+					</div>
+				</div>
 				<h4 class="ui dividing header">{{'views.transaction.recordTime' | translate}}</h4>
 				<div class="two fields">
 					<div class="field">
@@ -41,9 +49,9 @@
 	</form>
 
 	<h1 class="ui dividing header">{{'views.subheader.list' | translate}}</h1>
+	<h4 class="ui header">{{'views.transaction.grandTotal' | translate}} : {{ grandTotal | currency }}</h4>
 	<div>
 		<div id="grid1" ui-grid="gridOptions" ui-grid-pagination class="grid"></div>
 	</div>
-	<h4 class="ui header">{{'views.transaction.grandTotal' | translate}} : {{ grandTotal | currency }}</h4>
 </div>
 

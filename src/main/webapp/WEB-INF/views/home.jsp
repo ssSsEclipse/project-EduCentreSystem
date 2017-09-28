@@ -7,7 +7,7 @@
 <link rel="stylesheet" type="text/css" href="webjars/angular-ui-grid/4.0.6/ui-grid.min.css">
 <link rel="stylesheet" type="text/css" href="resources/styles/header.css">
 <style>
-[ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x- ng-cloak
+[ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak
 	{
 	display: none !important;
 }
@@ -17,16 +17,17 @@
 }
 
 .grid {
-	max-height: 410px;
+	max-height: 820px;
 }
 </style>
 </head>
 <body ng-controller="AppCtrl" ng-cloak>
 	<div class="ui fixed inverted menu">
 		<div class="ui container">
-			<a href="#" class="header item"><i class="circular inverted teal book icon"></i>{{'views.header.appname' | translate}}</a> <a href="#/user" class="item" translate="views.header.user"
-				ng-show="hasRole('ROLE_ADMIN')"></a> <a href="#/centre" class="item" translate="views.header.centre"></a> <a href="#/transaction" class="item" translate="views.header.transaction"
-				ng-show="hasRole('ROLE_USER')"></a>
+			<a href="#" class="header item"><i class="circular inverted teal book icon"></i>{{'views.header.appname' | translate}}</a> 
+			<a href="#/user" class="item" translate="views.header.user" ng-show="hasRole('ROLE_ADMIN')"></a> 
+			<a href="#/centre" class="item" translate="views.header.centre"></a> 
+			<a href="#/transaction" class="item" translate="views.header.transaction"></a>
 			<div class="right menu">
 				<div class="ui simple dropdown item">
 					{{ 'LOCALE_LANGUAGE' | translate }} <i class="dropdown icon"></i>

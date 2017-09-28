@@ -10,7 +10,7 @@ import com.hkta.educentresystem.entity.Centre;
 @Repository
 public interface CentreRepository extends PagingAndSortingRepository<Centre, Long> {
 	
-	Centre findByCouponCode(String couponCode);
+	Centre findByCouponCodeIgnoreCase(String couponCode);
    
 	Page<Centre> findAll(Pageable p);
 }

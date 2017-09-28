@@ -9,8 +9,8 @@
 		<intercept-url pattern="/centres/**" access="hasRole('ROLE_ADMIN') or hasRole('ROLE_USER')" />
 		<intercept-url pattern="/users**" access="hasRole('ROLE_ADMIN')" /> 
 		<intercept-url pattern="/users/**" access="hasRole('ROLE_ADMIN')" />
-		<intercept-url pattern="/transactions**" access="hasRole('ROLE_USER')" />
-		<intercept-url pattern="/transactions/**" access="hasRole('ROLE_USER')" />
+		<intercept-url pattern="/transactions**" access="hasRole('ROLE_ADMIN') or hasRole('ROLE_USER')" />
+		<intercept-url pattern="/transactions/**" access="hasRole('ROLE_ADMIN') or hasRole('ROLE_USER')" />
 		<intercept-url pattern="/home**" access="hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')" />
 		<intercept-url pattern="/home/**" access="hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')" />
 		<intercept-url pattern="/currentUser**" access="hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')" />

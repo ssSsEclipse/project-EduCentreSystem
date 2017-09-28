@@ -70,7 +70,9 @@ app.factory('CommonFactory', function() {
 							  .dropdown('set selected', data[name]);
 						}
 					} else if (type == 'file') {
-						$('input[name=logoBytes]').val(data[name]);
+						if (name == 'logo') {
+							$('input[name=logoBytes]').val(data[name]);
+						}
 					} else {
 						element.value = data[name];
 					}

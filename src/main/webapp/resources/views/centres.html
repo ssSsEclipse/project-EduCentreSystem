@@ -25,10 +25,10 @@
 				<div class="field">
 					<label>{{'views.centre.logo' | translate}}</label>
 					<div class="ui action input">
-						<input type="text" placeholder="{{'views.centre.logo' | translate}}" readonly name="fileName"> 
+						<input type="text" placeholder="{{'views.centre.logo' | translate}}" readonly name="logoFileName"> 
 						<input style="display: none;" name="logoBytes" /> 
 						<input type="file" name="logo" style="display: none;">
-						<div class="ui icon button" ng-click="openFile()">
+						<div class="ui icon button" ng-click="openFileFor('logo')">
 							<i class="attach icon"></i>
 						</div>
 					</div>
@@ -98,8 +98,12 @@
 			<div class="field">
 				<label>{{'views.centre.discountComissionPdf' | translate}}</label>
 				<div class="ui action input">
-					<input type="text" placeholder="{{'views.centre.discountComissionPdf' | translate}}" name="discountComissionPdf" readonly="" id="discountComissionPdf" value="test.pdf">
-					<button class="ui button" onclick="window.open('resources/pdf/'+$('#discountComissionPdf').val());">
+					<input type="text" placeholder="{{'views.centre.discountComissionPdf' | translate}}" readonly name="discountComissionPdfFileName" id="discountComissionPdfFileName"> 
+					<input type="file" name="discountComissionPdf" style="display: none;">
+					<div class="ui icon button" ng-click="openFileFor('discountComissionPdf')">
+						<i class="attach icon"></i>
+					</div>
+					<button ng-if="discountComissionPdfFileName" class="ui teal button" ng-click="downloadPdf()">
 						<i class="download icon"></i>{{'button.download' | translate}}
 					</button>
 				</div>

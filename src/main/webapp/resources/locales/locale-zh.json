@@ -31,6 +31,7 @@
 	"views.user.response.message.error.create" : "無法新增用戶",
 	"views.user.response.message.error.user.already.exists" : "用戶名已存在",
 	
+	"views.transaction.tutorialCentre": "補習社",
 	"views.transaction.id": "交易編號",
 	"views.transaction.year": "年份",
 	"views.transaction.month": "月份",
@@ -87,10 +88,11 @@
 	"button.search": "搜尋",
 	"button.generate": "產生",
 	"button.download": "下載",
+	"button.upload": "上載",
 	
 	"modal.delete.confirm" : "確定刪除?",
 	"modal.delete.yes" : "是",
 	"modal.delete.no" : "否",
 	
-	"views.subheader.list": "名單"
+	"views.subheader.list": "列表"
 }

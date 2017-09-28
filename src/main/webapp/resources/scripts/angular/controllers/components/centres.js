@@ -1,16 +1,16 @@
 var app = angular.module('app');
 
-app.controller('CentresCtrl', ['$scope','CentreService','CommonFactory','$translate','$filter','$rootScope','$window', 
-                               function ($scope,CentreService,CommonFactory,$translate,$filter,$rootScope,$window) {
+app.controller('CentresCtrl', ['$scope','CentreService','CommonFactory','$translate','$filter','$rootScope','$window','$http', 
+                               function ($scope,CentreService,CommonFactory,$translate,$filter,$rootScope,$window,$http) {
 	var $filterTranslate = $filter('translate');
 	var paginationOptions = {
 			pageNumber: 1,
-			pageSize: 10,
+			pageSize: 100,
 			sort: null
 	};
    
    $scope.gridOptions = {
-		   paginationPageSizes: [5, 10, 20],
+		   paginationPageSizes: [50, 100, 200],
 		   paginationPageSize: paginationOptions.pageSize,
 		   enableColumnMenus: false,
 		   enableFiltering: true,
@@ -36,7 +36,7 @@ app.controller('CentresCtrl', ['$scope','CentreService','CommonFactory','$transl
                 { name: 'accountName', minWidth: 150, displayName:'views.centre.accountName', headerCellFilter:'translate' },
                 { name: 'accountNumber', minWidth: 150, displayName:'views.centre.accountNumber', headerCellFilter:'translate' },
                 { name: 'couponCode', minWidth: 300, displayName:'views.centre.couponCode', headerCellFilter:'translate' },
-                { name: 'discountComissionPdf', minWidth: 200, displayName:'views.centre.discountComissionPdf', headerCellFilter:'translate' },
+                { name: 'discountComissionPdfFileName', minWidth: 200, displayName:'views.centre.discountComissionPdf', headerCellFilter:'translate' },
                 { name: 'grandTotal', displayName:'views.transaction.grandTotal', headerCellFilter:'translate', width: 150, cellFilter: 'currency' },
                 { name: 'createDateTime', minWidth: 170, type: 'date', cellFilter: 'date:"yyyy-MM-dd HH:mm:ss"', enableFiltering: false
                 	, displayName:'column.header.createDateTime', headerCellFilter:'translate'},
@@ -85,16 +85,17 @@ app.controller('CentresCtrl', ['$scope','CentreService','CommonFactory','$transl
 			   CommonFactory.buildResponseMessage($scope.responseMessage, $filterTranslate(response.data.message), 'error');
 		   });
    }
+   
 	$('.ui.form').form();
 	
 	$('input:file', '.ui.action.input')
 	  .on('change', function(e) {
 	    var name = e.target.files[0].name;
-	    $('input[name=fileName]', $(e.target).parent()).val(name);
+	    $('input[name=' + e.target.name + 'FileName]', $(e.target).parent()).val(name);
 	});
-	
-	$scope.openFile = function() {
-		$('input[name=logo]').click();
+
+	$scope.openFileFor = function(inputName) {
+		$('input[name=' + inputName + ']').click();
 	}
    
    $scope.generateCouponCode = function() {
@@ -110,23 +111,16 @@ app.controller('CentresCtrl', ['$scope','CentreService','CommonFactory','$transl
 		$('#couponCode').val(uuid());
    }
    
-   $scope.downloadPdf = function(filename) {
-       $http.get('resources/pdf/'+filename).then(function(response) {
-           $(anchor).attr({
-               href: 'data:application/pdf;base64,' + response.data,
-               download: attr.filename
-           })
-               .removeAttr('disabled')
-               .text('Save')
-               .removeClass('btn-primary')
-               .addClass('btn-success');
-       });
+   $scope.downloadPdf = function() {
+       window.location='centres/document/'+$scope.editingCentreId;
    }
    
    $scope.editSelectedRow = function(centre) {
 	   if ($scope.centreForm != null) {
 		   $scope.editMode = true;
 		   $scope.editingCentre = centre.schoolName;
+		   $scope.editingCentreId = centre.id;
+		   $scope.discountComissionPdfFileName = centre.discountComissionPdfFileName;
 		   CommonFactory.resetResponseMessage($scope.responseMessage)
 		   CommonFactory.putDataToForm(centre, $scope.centreForm);
 		   if ($('input[name=logoBytes]').val()) {
@@ -137,6 +131,7 @@ app.controller('CentresCtrl', ['$scope','CentreService','CommonFactory','$transl
    
    $scope.resetForm = function() {
 	   $scope.editMode = false;
+	   $scope.discountComissionPdfFileName = null;
        CommonFactory.resetForm($scope.centreForm);
    }
    
@@ -239,8 +234,10 @@ app.service('CentreService',['$http','CommonFactory', function ($http,CommonFact
     		{ type: "application/json" }
 		));
 
-    	var file = $('input[name=logo]').prop('files').length > 0 ? $('input[name=logo]').prop('files')[0] : null;
-    	formData.append("file", file);
+    	var logo = $('input[name=logo]').prop('files').length > 0 ? $('input[name=logo]').prop('files')[0] : null;
+    	formData.append("logo", logo);
+		var discountComission = $('input[name=discountComissionPdf]').prop('files').length > 0 ? $('input[name=discountComissionPdf]').prop('files')[0] : null;
+		formData.append("discountComission", discountComission);
     	
         return $http({
           method: 'POST',
@@ -266,8 +263,10 @@ app.service('CentreService',['$http','CommonFactory', function ($http,CommonFact
     		{ type: "application/json" }
 		));
 
-    	var file = $('input[name=logo]').prop('files').length > 0 ? $('input[name=logo]').prop('files')[0] : null;
-    	formData.append("file", file);
+    	var logo = $('input[name=logo]').prop('files').length > 0 ? $('input[name=logo]').prop('files')[0] : null;
+    	formData.append("logo", logo);
+		var discountComission = $('input[name=discountComissionPdf]').prop('files').length > 0 ? $('input[name=discountComissionPdf]').prop('files')[0] : null;
+		formData.append("discountComission", discountComission);
     	
         return $http({
           method: 'POST',

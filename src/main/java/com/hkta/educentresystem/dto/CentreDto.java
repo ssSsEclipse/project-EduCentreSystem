@@ -1,109 +1,50 @@
-package com.hkta.educentresystem.entity;
+package com.hkta.educentresystem.dto;
 
-import java.math.BigDecimal;
-import java.util.Date;
-import java.util.List;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Lob;
-import javax.persistence.OneToMany;
-import javax.persistence.PrePersist;
-import javax.persistence.PreUpdate;
-import javax.persistence.Table;
-
-import org.hibernate.annotations.Formula;
-
-@Entity
-@Table(name = "tutorial_centre")
-public class Centre extends AuditData{
+public class CentreDto{
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 5422955536240948353L;
 
-	@Id
-	@Column(name = "id")
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	@Column(name = "institution_pic")
 	private String institutionPic;
 
-	@Column(name = "school_name")
 	private String schoolName;
 
-	@Column(name = "school_address")
 	private String schoolAddress;
 	
-	@Column(name = "pic_mobile")
 	private String picMobile;
-
-	@Column(name = "school_phone")
+	
 	private String schoolPhone;
 	
-	@Column(name = "school_fax")
 	private String schoolFax;
 
-	@Column(name = "email")
 	private String email;
 
-	@Column(name = "website")
 	private String website;
 
-	@Column(name = "bank_name")
 	private String bankName;
 
-	@Column(name = "account_name")
 	private String accountName;
 
-	@Column(name = "account_number")
 	private String accountNumber;
 
-	@Column(name = "coupon_code")
 	private String couponCode;
 
-	@Column(name = "discount_comission_pdf")
-	private byte[] discountComissionPdf;
+	private String discountComissionPdfUrl;
 	
-	@Column(name = "discount_comission_pdf_filename")
 	private String discountComissionPdfFileName;
 	
-	@OneToMany(fetch = FetchType.EAGER, mappedBy = "tutorialCentre")
-	private List<Transaction> transactions;
-	
-	@Formula("(select sum(t.commission) from transaction_record t where t.tutorial_centre_id = id)")
-	private BigDecimal grandTotal;
-	
-	@Column(name = "logo")
 	private byte[] logo;
-	
-	@Column(name = "has_logo")
-	private Boolean hasLogo;
-
-	@PreUpdate
-    public void onPreUpdate() {
-		super.onPreUpdate();
-		this.hasLogo = logo != null && logo.length > 0;
-    }
-	
-	@PrePersist
-	public void onPrePersist() {
-		super.onPrePersist();
-		this.hasLogo = logo != null && logo.length > 0;
-	}
-	
+		
 	public Long getId() {
 		return id;
 	}
-	
-	public Boolean isHasLogo() {
-		return hasLogo;
+
+	public void setId(Long id) {
+		this.id = id;
 	}
 
 	public byte[] getLogo() {
@@ -112,10 +53,6 @@ public class Centre extends AuditData{
 
 	public void setLogo(byte[] logo) {
 		this.logo = logo;
-	}
-
-	public BigDecimal getGrandTotal() {
-		return grandTotal;
 	}
 
 	public String getInstitutionPic() {
@@ -214,14 +151,6 @@ public class Centre extends AuditData{
 		this.couponCode = couponCode;
 	}
 
-	public byte[] getDiscountComissionPdf() {
-		return discountComissionPdf;
-	}
-
-	public void setDiscountComissionPdf(byte[] discountComissionPdf) {
-		this.discountComissionPdf = discountComissionPdf;
-	}
-
 	public String getDiscountComissionPdfFileName() {
 		return discountComissionPdfFileName;
 	}
@@ -229,4 +158,13 @@ public class Centre extends AuditData{
 	public void setDiscountComissionPdfFileName(String discountComissionPdfFileName) {
 		this.discountComissionPdfFileName = discountComissionPdfFileName;
 	}
+
+	public String getDiscountComissionPdfUrl() {
+		return discountComissionPdfUrl;
+	}
+
+	public void setDiscountComissionPdfUrl(String discountComissionPdfUrl) {
+		this.discountComissionPdfUrl = discountComissionPdfUrl;
+	}
+	
 }

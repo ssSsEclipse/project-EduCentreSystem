@@ -4,11 +4,11 @@ app.controller('UsersCtrl', ['$scope','UsersService','CommonFactory','$translate
 	var $filterTranslate = $filter('translate');
 	var paginationOptions = {
 			pageNumber: 1,
-			pageSize: 10,
+			pageSize: 100,
 			sort: null
 	};
    $scope.gridOptions = {
-		   paginationPageSizes: [5, 10, 20],
+		   paginationPageSizes: [50, 100, 200],
 		   paginationPageSize: paginationOptions.pageSize,
 		   enableColumnMenus:false,
 		   enableFiltering: true,

@@ -31,6 +31,7 @@
 	"views.user.response.message.error.create" : "Unable to create user",
 	"views.user.response.message.error.user.already.exists" : "Username already exists",
 	
+	"views.transaction.tutorialCentre": "Centre",
 	"views.transaction.id": "ID",
 	"views.transaction.year": "Year",
 	"views.transaction.month": "Month",
@@ -80,6 +81,7 @@
 	"button.search": "Search",
 	"button.generate": "Generate",
 	"button.download": "Download",
+	"button.upload": "Upload",
 	
 	"modal.delete.confirm" : "Are you sure to delete?",
 	"modal.delete.yes" : "Yes",
