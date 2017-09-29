@@ -1,5 +1,7 @@
 package com.hkta.educentresystem.dto;
 
+import java.math.BigDecimal;
+
 public class CentreDto{
 
 	/**

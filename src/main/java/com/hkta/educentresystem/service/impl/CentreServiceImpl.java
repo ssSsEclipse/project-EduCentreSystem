@@ -61,7 +61,7 @@ public class CentreServiceImpl extends AbstractBaseCrudService<Centre, Long> imp
 	@Override
 	public boolean canDeleteCentre(Centre centre) {
 		boolean result = false;
-		result = userService.findByCentre(centre.getId()).isEmpty() && transactionService.findByCentreWithMonthYear(centre.getId(), null, null, 0, Integer.MAX_VALUE).getTotalElements() == 0;
+		result = userService.findByCentre(centre.getId()).isEmpty() && transactionService.findByCentreIdMonthYear(centre.getId().toString(), null, null, 0, Integer.MAX_VALUE).getTotalElements() == 0;
 		return result;
 	}
 }
